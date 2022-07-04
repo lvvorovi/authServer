@@ -1,9 +1,7 @@
 package com.trackerauth.AuthServer.security;
 
 import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
-import org.modelmapper.Converters;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
 import java.util.*;
@@ -53,14 +51,12 @@ public class CustomClientDetails implements ClientDetails {
 
     @Override
     public Set<String> getRegisteredRedirectUri() {
-        return Set.of("http://localhost:9090/code");
+        return Set.of("http://localhost:7070/code");
     }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorityList = new ArrayList<>();
-        authorityList.add(new SimpleGrantedAuthority("read"));
-        return authorityList;
+        return List.of(() -> "read");
     }
 
     @Override

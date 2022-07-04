@@ -1,24 +1,20 @@
 package com.trackerauth.AuthServer.domains.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trackerauth.AuthServer.domains.user.UserScope;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Validated
 @Data
-public class UserResponseDto {
+@EqualsAndHashCode(callSuper = false)
+public class UserResponseDto extends RepresentationModel<UserResponseDto> {
 
-    @NotEmpty
     private UUID id;
-    @Email
     private String username;
-    @NotEmpty
+    @JsonIgnore
     private String password;
-    @NotNull
     private UserScope scope;
 }

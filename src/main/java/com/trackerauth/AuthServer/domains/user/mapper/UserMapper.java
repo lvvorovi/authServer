@@ -8,7 +8,9 @@ import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 public interface UserMapper {
 
     UserEntity createDtoToEntity(CreateUserDto dto);
+
     UserEntity updateDtoToEntity(UpdateUserDto dto);
+
     UserResponseDto entityToDto(UserEntity entity);
 
 }

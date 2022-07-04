@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClientMapperImpl implements ClientMapper{
+public class ClientMapperImpl implements ClientMapper {
 
     private final ModelMapper mapper;
 

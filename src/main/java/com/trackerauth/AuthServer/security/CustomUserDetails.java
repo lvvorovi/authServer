@@ -17,9 +17,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-//        grantedAuthorities.add(() -> userResponseDto.getScope().getCode());
-//        return grantedAuthorities;
         return List.of(() -> "read");
     }
 

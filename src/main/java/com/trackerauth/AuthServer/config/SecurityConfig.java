@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,8 +46,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.POST,"/users").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/users").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/clients").permitAll()
                 .anyRequest().authenticated();
     }
+
+
 }

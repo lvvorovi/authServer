@@ -8,4 +8,6 @@ public interface UserService {
     UserResponseDto findByUserName(String username);
 
     UserResponseDto save(CreateUserDto dto);
+
+    UserResponseDto findById(String id);
 }

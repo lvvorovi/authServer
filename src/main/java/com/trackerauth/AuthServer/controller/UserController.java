@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users")
@@ -20,17 +22,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponseDto>> findAll() {
-        List<UserResponseDto> userResponseDtoList = List.of(userService.findByUserName("user"));
-
-        return ResponseEntity.ok(userResponseDtoList);
-
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> findById(@PathVariable String id) {
+        UserResponseDto responseDto = userService.findById(id);
+        addSelfLink(responseDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
-    public ResponseEntity<?> saveUser(@Valid @RequestBody CreateUserDto dto) {
-        UserResponseDto responseDto = userService.save(dto);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody CreateUserDto createUserDto) {
+        UserResponseDto responseDto = userService.save(createUserDto);
+        addSelfLink(responseDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    private void addSelfLink(UserResponseDto dto) {
+        dto.add(linkTo(methodOn(UserController.class).findById(dto.getId().toString())).withSelfRel());
     }
 }

@@ -14,30 +14,38 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper mapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
+        this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserResponseDto findByUserName(String username) {
-        assert username != null : "Username shall not be null";
+        assert username != null : "Username must not be null";
         UserEntity entity = userRepository.findByUsername(username).orElseThrow(() ->
                 new RuntimeException("User with username " + username + " was not found"));
-        return userMapper.entityToDto(entity);
+        return mapper.entityToDto(entity);
     }
 
     @Override
     public UserResponseDto save(CreateUserDto dto) {
-        assert dto != null : "CreateUserDto shall not be null";
-        UserEntity entityToSave = userMapper.createDtoToEntity(dto);
+        assert dto != null : "CreateUserDto must not be null";
+        UserEntity entityToSave = mapper.createDtoToEntity(dto);
         entityToSave.setId(UUID.randomUUID());
         entityToSave.setPassword(passwordEncoder.encode(entityToSave.getPassword()));
         UserEntity savedEntity = userRepository.save(entityToSave);
-        return userMapper.entityToDto(savedEntity);
+        return mapper.entityToDto(savedEntity);
+    }
+
+    @Override
+    public UserResponseDto findById(String id) {
+        assert id != null : "id must not be null";
+        UserEntity entity = userRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("User with username " + id + " was not found"));
+        return mapper.entityToDto(entity);
     }
 }

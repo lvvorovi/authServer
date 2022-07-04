@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ClientServiceImpl implements ClientService {
 
@@ -23,7 +25,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientResponseDto loadClientByClientId(String clientId) {
+    public ClientResponseDto findById(String clientId) {
         assert clientId != null : "ClientId may not be null";
         ClientEntity entity = repository.findById(clientId)
                 .orElseThrow(() -> new NoSuchClientException("Client with id " + clientId + " was not found"));
@@ -34,11 +36,11 @@ public class ClientServiceImpl implements ClientService {
     public ClientResponseDto save(CreateClientDto dto) {
         assert dto != null : "CreateClientDto may not be null";
         ClientEntity requestEntity = mapper.createDtoToEntity(dto);
-        requestEntity.setId("client");
-
-        requestEntity.setSecret(passwordEncoder.encode("12345"));
+        requestEntity.setId(UUID.randomUUID().toString());
+        requestEntity.setSecret(passwordEncoder.encode(requestEntity.getSecret()));
 
         ClientEntity savedEntity = repository.save(requestEntity);
         return mapper.entityToDto(savedEntity);
     }
+
 }
