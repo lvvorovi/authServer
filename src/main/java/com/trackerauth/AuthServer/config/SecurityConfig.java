@@ -2,6 +2,7 @@ package com.trackerauth.AuthServer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,7 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         var converter = new JwtAccessTokenConverter();
-        converter.setSigningKey("secret");//TODO hardcoded
+        KeyStoreKeyFactory keyFactory = new KeyStoreKeyFactory(
+                new ClassPathResource("ssia.jks"), "ssia123".toCharArray()
+        );
+        converter.setKeyPair(keyFactory.getKeyPair("ssia"));
         return converter;
     }
 
