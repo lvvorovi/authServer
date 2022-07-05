@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (appConfig.getIsDevelopmentMode()) {
             http.csrf().disable();
             http.formLogin().permitAll();
+            http.cors().disable();
         }
         http.httpBasic();
         http.authorizeRequests()
@@ -61,5 +62,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .anyRequest().authenticated();
     }
-
 }

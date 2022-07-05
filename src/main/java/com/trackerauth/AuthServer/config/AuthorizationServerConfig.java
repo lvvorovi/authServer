@@ -1,7 +1,6 @@
 package com.trackerauth.AuthServer.config;
 
 import com.trackerauth.AuthServer.domains.client.service.SecurityClientDetailsService;
-import com.trackerauth.AuthServer.domains.user.service.SecurityUserDetailsService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,17 +16,17 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final SecurityClientDetailsService clientDetailsService;
-    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
     private final JwtAccessTokenConverter converter;
+    private final UserDetailsService userDetailsService;
 
-    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, SecurityUserDetailsService userDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter) {
+    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService/*, SecurityUserDetailsService userDetailsService*/, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, UserDetailsService userDetailsService) {
         this.clientDetailsService = clientDetailsService;
-        this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.converter = converter;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
