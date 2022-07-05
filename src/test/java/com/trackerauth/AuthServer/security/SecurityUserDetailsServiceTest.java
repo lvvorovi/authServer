@@ -1,8 +1,10 @@
 package com.trackerauth.AuthServer.security;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
-import com.trackerauth.AuthServer.domains.user.UserScope;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
+import com.trackerauth.AuthServer.domains.user.dto.SecurityUserDetails;
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
+import com.trackerauth.AuthServer.domains.user.service.SecurityUserDetailsService;
 import com.trackerauth.AuthServer.domains.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,14 +21,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class CustomUserDetailsServiceTest {
+class SecurityUserDetailsServiceTest {
 
     @Mock
     UserService userService;
     @Mock
-    CustomUserDetails userDetails;
+    SecurityUserDetails userDetails;
     @InjectMocks
-    CustomUserDetailsService victim;
+    SecurityUserDetailsService victim;
 
     private UserEntity userEntity() {
         UserEntity entity = new UserEntity();
@@ -49,7 +51,7 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername_returnsUserDetails() {
         UserResponseDto userResponseDto = userResponseDto(userEntity());
-        CustomUserDetails expectedUserDetails = new CustomUserDetails(userResponseDto);
+        SecurityUserDetails expectedUserDetails = new SecurityUserDetails(userResponseDto);
         when(userService.findByUserName(any())).thenReturn(userResponseDto);
         UserDetails returnedUserDetails = victim.loadUserByUsername(any());
         assertEquals(expectedUserDetails.getUsername(), returnedUserDetails.getUsername());

@@ -1,7 +1,7 @@
 package com.trackerauth.AuthServer.config;
 
-import com.trackerauth.AuthServer.security.CustomClientDetailsService;
-import com.trackerauth.AuthServer.security.CustomUserDetailsService;
+import com.trackerauth.AuthServer.domains.client.service.SecurityClientDetailsService;
+import com.trackerauth.AuthServer.domains.user.service.SecurityUserDetailsService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,15 +17,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 
-    private final CustomClientDetailsService clientDetailsService;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityClientDetailsService clientDetailsService;
+    private final SecurityUserDetailsService securityUserDetailsService;
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
     private final JwtAccessTokenConverter converter;
 
-    public AuthorizationServerConfig(CustomClientDetailsService clientDetailsService, CustomUserDetailsService customUserDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter) {
+    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, SecurityUserDetailsService securityUserDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter) {
         this.clientDetailsService = clientDetailsService;
-        this.customUserDetailsService = customUserDetailsService;
+        this.securityUserDetailsService = securityUserDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.converter = converter;
@@ -41,11 +41,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore)
                 .accessTokenConverter(converter)
-                .userDetailsService(customUserDetailsService);
+                .userDetailsService(securityUserDetailsService);
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         security.tokenKeyAccess("isAuthenticated()");
     }
 }

@@ -1,4 +1,4 @@
-package com.trackerauth.AuthServer.domains.user;
+package com.trackerauth.AuthServer.domains.user.scope;
 
 import javax.validation.constraints.NotEmpty;
 

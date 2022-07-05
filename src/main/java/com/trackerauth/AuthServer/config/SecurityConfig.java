@@ -10,12 +10,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final AppConfig appConfig;
+
+    public SecurityConfig(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,16 +52,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        if (appConfig.getIsDevelopmentMode()){
+            http.csrf().disable();
+            http.formLogin();
+        }
         http.httpBasic();
-        http.formLogin();
-
-        http.csrf().disable();
-
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/users").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/clients").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/clients").permitAll()
                 .anyRequest().authenticated();
     }
-
-
 }

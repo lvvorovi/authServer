@@ -24,3 +24,6 @@ logging:
     root: info
     com:
       tracker: info
+
+app:
+  isDevelopmentMode: true

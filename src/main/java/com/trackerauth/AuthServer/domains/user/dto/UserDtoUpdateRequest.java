@@ -1,24 +1,25 @@
 package com.trackerauth.AuthServer.domains.user.dto;
 
-import com.trackerauth.AuthServer.domains.user.UserScope;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
+import javax.validation.constraints.Size;
 
 @Validated
 @Data
-public class UpdateUserDto {
+@NotNull
+public class UserDtoUpdateRequest {
 
-    @NotEmpty
-    private UUID id;
+    @NotBlank
+    private String id;
     @Email
-    private String username;
-    @NotEmpty
-    private String password;
     @NotNull
-    private UserScope scope;
+    private String username;
+    @NotBlank
+    @Size(min = 3, max = 30, message = "length 3 to 30")
+    private String password;
+
 }

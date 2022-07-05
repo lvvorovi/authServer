@@ -1,4 +1,4 @@
-package com.trackerauth.AuthServer.domains.user;
+package com.trackerauth.AuthServer.domains.user.scope;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

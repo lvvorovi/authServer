@@ -1,7 +1,7 @@
-package com.trackerauth.AuthServer.security;
+package com.trackerauth.AuthServer.domains.user.service;
 
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
-import com.trackerauth.AuthServer.domains.user.service.UserService;
+import com.trackerauth.AuthServer.domains.user.dto.SecurityUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class CustomUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
 
-    public CustomUserDetailsService(UserService userService) {
+    public SecurityUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         } catch (RuntimeException e) {
             throw new UsernameNotFoundException("user not found");
         }
-        log.info("loaded CustomUserDetails {}", userResponseDto);
-        return new CustomUserDetails(userResponseDto);
+        log.info("loaded SecurityUserDetails {}", userResponseDto);
+        return new SecurityUserDetails(userResponseDto);
     }
 }

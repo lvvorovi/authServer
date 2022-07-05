@@ -11,4 +11,6 @@ public interface ClientRepository {
     Optional<ClientEntity> findById(String id);
 
     ClientEntity save(ClientEntity entity);
+
+    void deleteById(String id);
 }

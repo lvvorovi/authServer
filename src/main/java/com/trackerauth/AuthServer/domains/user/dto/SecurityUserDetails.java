@@ -1,4 +1,4 @@
-package com.trackerauth.AuthServer.security;
+package com.trackerauth.AuthServer.domains.user.dto;
 
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
+public class SecurityUserDetails implements UserDetails {
 
     private final UserResponseDto userResponseDto;
 
-    public CustomUserDetails(UserResponseDto userResponseDto) {
+    public SecurityUserDetails(UserResponseDto userResponseDto) {
         this.userResponseDto = userResponseDto;
     }
 

@@ -1,9 +1,9 @@
 package com.trackerauth.AuthServer.user.mapper;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
-import com.trackerauth.AuthServer.domains.user.UserScope;
-import com.trackerauth.AuthServer.domains.user.dto.CreateUserDto;
-import com.trackerauth.AuthServer.domains.user.dto.UpdateUserDto;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.mapper.UserModelMapperImpl;
 import org.junit.jupiter.api.Test;
@@ -39,16 +39,16 @@ class UserModelMapperImplTest {
         return dto;
     }
 
-    private CreateUserDto createUserDto(UserEntity entity) {
-        CreateUserDto dto = new CreateUserDto();
+    private UserDtoCreateRequest createUserDto(UserEntity entity) {
+        UserDtoCreateRequest dto = new UserDtoCreateRequest();
         dto.setPassword(entity.getPassword());
         dto.setScope(entity.getScope());
         dto.setUsername(entity.getUsername());
         return dto;
     }
 
-    private UpdateUserDto updateUserDto(UserEntity entity) {
-        UpdateUserDto dto = new UpdateUserDto();
+    private UserDtoUpdateRequest updateUserDto(UserEntity entity) {
+        UserDtoUpdateRequest dto = new UserDtoUpdateRequest();
         dto.setId(entity.getId());
         dto.setPassword(entity.getPassword());
         dto.setScope(entity.getScope());
@@ -58,8 +58,8 @@ class UserModelMapperImplTest {
 
     @Test
     void createDtoToEntity_returnEntity() {
-        CreateUserDto userDto = createUserDto(userEntity());
-        UserEntity mappedEntity = victim.createDtoToEntity(userDto);
+        UserDtoCreateRequest userDto = createUserDto(userEntity());
+        UserEntity mappedEntity = victim.createRequestDtoToEntity(userDto);
         assertEquals(userDto.getScope(), mappedEntity.getScope());
         assertEquals(userDto.getPassword(), mappedEntity.getPassword());
         assertEquals(userDto.getUsername(), mappedEntity.getUsername());
@@ -69,7 +69,7 @@ class UserModelMapperImplTest {
     @Test
     void updateDtoToEntity_returnsEntity() {
         UserEntity entity = userEntity();
-        UserEntity mappedEntity = victim.updateDtoToEntity(updateUserDto(entity));
+        UserEntity mappedEntity = victim.updateRequestDtoToEntity(updateUserDto(entity));
         assertEquals(entity, mappedEntity);
     }
 
@@ -77,7 +77,7 @@ class UserModelMapperImplTest {
     void entityToDto_returnsDto() {
         UserEntity entity = userEntity();
         UserResponseDto responseDto = userResponseDto(entity);
-        UserResponseDto mappedDto = victim.entityToDto(entity);
+        UserResponseDto mappedDto = victim.entityToResponseDto(entity);
         assertEquals(responseDto, mappedDto);
     }
 }

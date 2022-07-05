@@ -11,4 +11,10 @@ public interface UserRepository {
     UserEntity save(UserEntity entity);
 
     Optional<UserEntity> findById(String id);
+
+    void deleteById(String id);
+
+    boolean existsByUsername(String username);
+
+    boolean existsById(String id);
 }

@@ -1,12 +1,12 @@
 package com.trackerauth.AuthServer.domains.user;
 
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
-    private UUID id;
+    private String id;
     @Column(name = "username")
     private String username;
     @Column(name = "password")

@@ -1,7 +1,7 @@
 package com.trackerauth.AuthServer.user;
 
-import com.trackerauth.AuthServer.domains.user.UserScope;
-import com.trackerauth.AuthServer.domains.user.UserScopeConverter;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
+import com.trackerauth.AuthServer.domains.user.scope.UserScopeConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

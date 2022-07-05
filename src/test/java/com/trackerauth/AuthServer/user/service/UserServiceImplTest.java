@@ -1,7 +1,7 @@
 package com.trackerauth.AuthServer.user.service;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
-import com.trackerauth.AuthServer.domains.user.UserScope;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.mapper.UserMapper;
 import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
@@ -54,7 +54,7 @@ class UserServiceImplTest {
                 .isInstanceOf(AssertionError.class)
                 .hasMessage("Username shall not be null");
         verify(repository, times(0)).findByUsername(any());
-        verify(mapper, times(0)).entityToDto(any());
+        verify(mapper, times(0)).entityToResponseDto(any());
     }
 
     @Test
@@ -62,11 +62,11 @@ class UserServiceImplTest {
         UserEntity userEntity = userEntity();
         UserResponseDto userDto = userResponseDto(userEntity);
         when(repository.findByUsername(any())).thenReturn(Optional.of(userEntity));
-        when(mapper.entityToDto(any())).thenReturn(userDto);
+        when(mapper.entityToResponseDto(any())).thenReturn(userDto);
         UserResponseDto responseUserDto = victim.findByUserName("user@user.com");
         assertEquals(userDto, responseUserDto);
         verify(repository, times(1)).findByUsername(any());
-        verify(mapper, times(1)).entityToDto(any());
+        verify(mapper, times(1)).entityToResponseDto(any());
     }
 
     @Test
@@ -75,7 +75,7 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> victim.findByUserName("user@user.com"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("User with username user@user.com was not found");
-        verify(mapper, times(0)).entityToDto(any());
+        verify(mapper, times(0)).entityToResponseDto(any());
 
     }
 

@@ -1,16 +1,15 @@
-package com.trackerauth.AuthServer.security;
+package com.trackerauth.AuthServer.domains.client.dto;
 
-import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
 import java.util.*;
 
-public class CustomClientDetails implements ClientDetails {
+public class SecurityClientDetails implements ClientDetails {
 
     private final ClientResponseDto clientResponseDto;
 
-    public CustomClientDetails(ClientResponseDto clientResponseDto) {
+    public SecurityClientDetails(ClientResponseDto clientResponseDto) {
         this.clientResponseDto = clientResponseDto;
     }
 

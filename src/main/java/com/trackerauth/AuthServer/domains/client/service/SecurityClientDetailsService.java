@@ -1,7 +1,7 @@
-package com.trackerauth.AuthServer.security;
+package com.trackerauth.AuthServer.domains.client.service;
 
 import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
-import com.trackerauth.AuthServer.domains.client.service.ClientService;
+import com.trackerauth.AuthServer.domains.client.dto.SecurityClientDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -13,11 +13,11 @@ import java.util.Arrays;
 
 @Component
 @Slf4j
-public class CustomClientDetailsService implements ClientDetailsService {
+public class SecurityClientDetailsService implements ClientDetailsService {
 
     private final ClientService clientService;
 
-    public CustomClientDetailsService(ClientService clientService) {
+    public SecurityClientDetailsService(ClientService clientService) {
         this.clientService = clientService;
     }
 
@@ -33,6 +33,6 @@ public class CustomClientDetailsService implements ClientDetailsService {
         log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
         log.info("loaded client {}", clientResponseDto);
 
-        return new CustomClientDetails(clientResponseDto);
+        return new SecurityClientDetails(clientResponseDto);
     }
 }
