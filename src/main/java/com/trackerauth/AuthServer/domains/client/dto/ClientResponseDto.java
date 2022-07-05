@@ -1,20 +1,17 @@
 package com.trackerauth.AuthServer.domains.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.constraints.NotNull;
-import java.util.UUID;
-
-@Validated
 @Data
-public class ClientResponseDto {
+@EqualsAndHashCode(callSuper = false)
+public class ClientResponseDto extends RepresentationModel<ClientResponseDto> {
 
-    @NotNull
     private String id;
-    @NotNull
     private String name;
-    @NotNull
+    @JsonIgnore
     private String secret;
 
 }
