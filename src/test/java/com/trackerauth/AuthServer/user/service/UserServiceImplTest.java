@@ -1,10 +1,10 @@
 package com.trackerauth.AuthServer.user.service;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
-import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.mapper.UserMapper;
 import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

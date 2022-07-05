@@ -1,9 +1,9 @@
 package com.trackerauth.AuthServer.security;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
-import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.dto.SecurityUserDetails;
 import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
+import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.service.SecurityUserDetailsService;
 import com.trackerauth.AuthServer.domains.user.service.UserService;
 import org.junit.jupiter.api.Test;

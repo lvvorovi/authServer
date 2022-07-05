@@ -4,11 +4,11 @@ import com.trackerauth.AuthServer.domains.client.service.SecurityClientDetailsSe
 import com.trackerauth.AuthServer.domains.user.service.SecurityUserDetailsService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
@@ -16,16 +16,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-
     private final SecurityClientDetailsService clientDetailsService;
-    private final SecurityUserDetailsService securityUserDetailsService;
+    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
     private final JwtAccessTokenConverter converter;
 
-    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, SecurityUserDetailsService securityUserDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter) {
+    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, SecurityUserDetailsService userDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter) {
         this.clientDetailsService = clientDetailsService;
-        this.securityUserDetailsService = securityUserDetailsService;
+        this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.converter = converter;
@@ -41,11 +40,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore)
                 .accessTokenConverter(converter)
-                .userDetailsService(securityUserDetailsService);
+                .userDetailsService(userDetailsService);
     }
 
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) {
-        security.tokenKeyAccess("isAuthenticated()");
-    }
 }

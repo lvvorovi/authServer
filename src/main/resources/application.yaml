@@ -12,6 +12,16 @@ spring:
     rest:
       default-media-type: application/json
 
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://localhost:9090/oauth/token_key
+    client:
+      client_id: d615b1db-3fbb-4323-aa17-59668c3d3fd2
+      client_secret: secret
+
 server:
   port: 9090
 

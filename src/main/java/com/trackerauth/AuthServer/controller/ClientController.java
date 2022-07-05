@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -24,7 +25,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> findById(@PathVariable String id) {
+    public ResponseEntity<ClientResponseDto> findById(@NotBlank @PathVariable String id) {
         ClientResponseDto responseDto = service.findById(id);
         return ResponseEntity.ok(responseDto);
     }

@@ -1,8 +1,6 @@
 package com.trackerauth.AuthServer.domains.user.exception;
 
-import org.springframework.security.authentication.BadCredentialsException;
-
-public class UserAlreadyExistsException extends BadCredentialsException {
+public class UserAlreadyExistsException extends RuntimeException {
 
     public UserAlreadyExistsException(String msg) {
         super(msg);

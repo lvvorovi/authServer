@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-//@Validated
+@Validated
 public interface UserService {
 
     UserResponseDto findByUserName(@NotBlank String username);

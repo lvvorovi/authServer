@@ -1,6 +1,5 @@
 package com.trackerauth.AuthServer.domains.user.dto;
 
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

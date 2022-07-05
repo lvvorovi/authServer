@@ -1,7 +1,7 @@
 package com.trackerauth.AuthServer.domains.user.service;
 
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.dto.SecurityUserDetails;
+import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
