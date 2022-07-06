@@ -23,7 +23,7 @@ public class UserScopeConverter implements AttributeConverter<UserScope, String>
         return Stream.of(UserScope.values())
                 .filter(scope -> scope.getCode().equals(dbData))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("UserScope converter unable to convert dbData " +
-                        dbData + " to scope"));
+                .orElseThrow(() -> new RuntimeException("UserScope converter unable to convert dbData '" +
+                        dbData + "' to scope"));
     }
 }

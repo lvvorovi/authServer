@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Validated
 @Data
-public class UserDtoCreateRequest {
+public class UserDtoCreateRequest{
 
     @Email
     @NotNull
