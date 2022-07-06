@@ -17,17 +17,17 @@ public class UserModelMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserEntity createRequestDtoToEntity(UserDtoCreateRequest dto) {
+    public UserEntity dtoToEntity(UserDtoCreateRequest dto) {
         return mapper.map(dto, UserEntity.class);
     }
 
     @Override
-    public UserEntity updateRequestDtoToEntity(UserDtoUpdateRequest dto) {
+    public UserEntity dtoToEntity(UserDtoUpdateRequest dto) {
         return mapper.map(dto, UserEntity.class);
     }
 
     @Override
-    public UserResponseDto entityToResponseDto(UserEntity entity) {
+    public UserResponseDto entityToDto(UserEntity entity) {
         return mapper.map(entity, UserResponseDto.class);
     }
 }

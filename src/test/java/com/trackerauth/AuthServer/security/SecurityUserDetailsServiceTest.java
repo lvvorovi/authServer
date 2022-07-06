@@ -32,7 +32,7 @@ class SecurityUserDetailsServiceTest {
 
     private UserEntity userEntity() {
         UserEntity entity = new UserEntity();
-        entity.setId(UUID.randomUUID());
+        entity.setId(UUID.randomUUID().toString());
         entity.setPassword("password");
         entity.setScope(UserScope.READ);
         entity.setUsername("user@user.com");

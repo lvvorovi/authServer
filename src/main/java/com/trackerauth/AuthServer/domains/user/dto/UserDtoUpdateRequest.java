@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 
 @Validated
 @Data
-@NotNull
 public class UserDtoUpdateRequest {
 
     @NotBlank

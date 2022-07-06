@@ -21,7 +21,4 @@ public interface UserService {
 
     void deleteById(@NotBlank String id);
 
-    void validate(UserDtoCreateRequest dto);
-
-    void validate(UserDtoUpdateRequest dto);
 }
