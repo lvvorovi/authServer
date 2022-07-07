@@ -23,25 +23,32 @@ public class UserRequestNameValidationRule implements UserValidationRule {
     @Override
     public void validate(UserDtoCreateRequest dto) {
         Assert.notNull(dto, "UserDtoCreateRequest");
-        Assert.notNull(dto.getUsername(), "'username' for User save()");
+        Assert.notNull(dto.getUsername(), "'username' for User.save()");
         boolean userAlreadyExists = repository.existsByUsername(dto.getUsername());
         if (userAlreadyExists) {
             throw new UserAlreadyExistsException("user with username " + dto.getUsername() + " already exists");
         }
-
     }
 
     @Override
     public void validate(UserDtoUpdateRequest dto) {
-        boolean existsById = false;
-        Optional<UserEntity> optionalEntity = repository.findByUsername(dto.getUsername());
-        if (optionalEntity.isPresent()) existsById = true;
+        Assert.notNull(dto, "UserDtoUpdateRequest");
+        Assert.notNull(dto.getUsername(), "'username' for User.update()");
+
+        Optional<UserEntity> optionalEntityById = repository.findById(dto.getId());
+        boolean existsById = optionalEntityById.isPresent();
         if (!existsById) {
             throw new UserNotFoundException("User with id " + dto.getId() + " was not found");
         }
-        boolean requestAndResponseHaveEqualId = dto.getId().equals(optionalEntity.get().getId());
-        boolean requestAndResponseHaveEqualUsername = dto.getUsername().equals(optionalEntity.get().getUsername());
-        if (requestAndResponseHaveEqualUsername && !requestAndResponseHaveEqualId)
-            throw new UserAlreadyExistsException("User with username " + dto.getUsername() + " already exists");
+
+        Optional<UserEntity> optionalEntityByUsername = repository.findByUsername(dto.getUsername());
+        boolean existsByUsername = optionalEntityByUsername.isPresent();
+        if (existsByUsername) {
+            boolean equalId = optionalEntityByUsername.get().getId()
+                    .equals(dto.getId());
+            if (!equalId) throw new UserAlreadyExistsException(
+                    "User with username " + dto.getUsername() + " already exists");
+
+        }
     }
 }

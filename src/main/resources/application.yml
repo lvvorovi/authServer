@@ -23,7 +23,7 @@ logging:
   level:
     root: info
     com:
-      tracker: info
+      trackerauth: info
 
 app:
   isDevelopmentMode: true

@@ -14,4 +14,9 @@ public interface UserRepositoryImpl extends CrudRepository<UserEntity, String>, 
 
     @Override
     boolean existsByUsername(String username);
+
+    @Override
+    Optional<UserEntity> findById(String id);
+
+
 }

@@ -1,11 +1,15 @@
 package com.trackerauth.AuthServer.domains.user.dto;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@ToString
+@EqualsAndHashCode
 public class SecurityUserDetails implements UserDetails {
 
     private final UserResponseDto userResponseDto;

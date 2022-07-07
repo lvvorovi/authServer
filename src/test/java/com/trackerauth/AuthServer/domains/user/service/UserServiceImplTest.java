@@ -46,7 +46,6 @@ class UserServiceImplTest {
         entity.setScope(UserScope.READ);
         return entity;
     }
-
     private UserResponseDto newUserResponseDto(UserEntity entity) {
         UserResponseDto dto = new UserResponseDto();
         dto.setId(entity.getId());
@@ -55,14 +54,12 @@ class UserServiceImplTest {
         dto.setScope(entity.getScope());
         return dto;
     }
-
     private UserDtoCreateRequest newUserCreateRequestDto(UserEntity entity) {
         UserDtoCreateRequest createRequestDto = new UserDtoCreateRequest();
         createRequestDto.setPassword(entity.getPassword());
         createRequestDto.setUsername(entity.getUsername());
         return createRequestDto;
     }
-
     private UserDtoUpdateRequest newUserUpdateRequestDto(UserEntity entity) {
         UserDtoUpdateRequest updateRequestDto = new UserDtoUpdateRequest();
         updateRequestDto.setPassword(entity.getPassword());
