@@ -17,10 +17,10 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AppConfig appConfig;
+    private final AppValuesHolder appValuesHolder;
 
-    public SecurityConfig(AppConfig appConfig) {
-        this.appConfig = appConfig;
+    public SecurityConfig(AppValuesHolder appValuesHolder) {
+        this.appValuesHolder = appValuesHolder;
     }
 
     @Bean
@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if (appConfig.getIsDevelopmentMode()) {
+        if (appValuesHolder.getIsDevelopmentMode()) {
             http.csrf().disable();
             http.formLogin().permitAll();
             http.cors().disable();

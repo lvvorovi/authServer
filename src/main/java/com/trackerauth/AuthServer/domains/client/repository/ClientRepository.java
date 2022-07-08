@@ -13,4 +13,6 @@ public interface ClientRepository {
     ClientEntity save(ClientEntity entity);
 
     void deleteById(String id);
+
+    boolean existsById(String id);
 }

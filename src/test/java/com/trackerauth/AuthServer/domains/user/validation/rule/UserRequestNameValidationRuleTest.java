@@ -3,7 +3,6 @@ package com.trackerauth.AuthServer.domains.user.validation.rule;
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
 import com.trackerauth.AuthServer.domains.user.repository.UserRepositoryImpl;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.validation.exception.UserAlreadyExistsException;
@@ -17,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,12 +36,14 @@ class UserRequestNameValidationRuleTest {
         entity.setScope(UserScope.READ);
         return entity;
     }
+
     private UserDtoCreateRequest newUserCreateRequestDto(UserEntity entity) {
         UserDtoCreateRequest createRequestDto = new UserDtoCreateRequest();
         createRequestDto.setPassword(entity.getPassword());
         createRequestDto.setUsername(entity.getUsername());
         return createRequestDto;
     }
+
     private UserDtoUpdateRequest newUserUpdateRequestDto(UserEntity entity) {
         UserDtoUpdateRequest updateRequestDto = new UserDtoUpdateRequest();
         updateRequestDto.setPassword(entity.getPassword());

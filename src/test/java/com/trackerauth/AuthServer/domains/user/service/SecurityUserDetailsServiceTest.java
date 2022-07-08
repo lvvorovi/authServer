@@ -2,23 +2,19 @@ package com.trackerauth.AuthServer.domains.user.service;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.SecurityUserDetails;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.validation.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,31 +39,33 @@ class SecurityUserDetailsServiceTest {
         entity.setScope(UserScope.READ);
         return entity;
     }
-    private UserResponseDto newUserResponseDto(UserEntity entity) {
-        UserResponseDto dto = new UserResponseDto();
+
+    private UserDtoResponse newUserResponseDto(UserEntity entity) {
+        UserDtoResponse dto = new UserDtoResponse();
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setPassword(entity.getPassword());
         dto.setScope(entity.getScope());
         return dto;
     }
-    private SecurityUserDetails newSecurityUserDetails(UserResponseDto dto) {
+
+    private SecurityUserDetails newSecurityUserDetails(UserDtoResponse dto) {
         return new SecurityUserDetails(dto);
     }
 
     @Test
     void loadUserByUsername_returnsSecurityUserDetails(CapturedOutput output) {
-        UserResponseDto responseDto = newUserResponseDto(newUserEntity());
-        SecurityUserDetails securityUserDetails = newSecurityUserDetails(responseDto);
+        UserDtoResponse responseDto = newUserResponseDto(newUserEntity());
+        SecurityUserDetails expected = newSecurityUserDetails(responseDto);
         String username = responseDto.getUsername();
         when(userService.findByUserName(username)).thenReturn(responseDto);
 
         UserDetails result = victim.loadUserByUsername(username);
 
-        assertEquals(securityUserDetails, result);
+        assertEquals(expected, result);
         verify(userService, times(1)).findByUserName(username);
-        assertThat(output.toString()).contains("loadUserByUsername " + username);
-        assertThat(output.toString()).contains("loaded SecurityUserDetails " + responseDto);
+        assertThat(output.toString()).contains("Requested to loadUserByUsername() with id = " + username);
+        assertThat(output.toString()).contains("Loaded UserDtoResponse " + responseDto);
         assertThatNoException().isThrownBy(() -> victim.loadUserByUsername(username));
     }
 
@@ -78,10 +76,10 @@ class SecurityUserDetailsServiceTest {
 
         assertThatThrownBy(() -> victim.loadUserByUsername(username))
                 .isInstanceOf(UsernameNotFoundException.class)
-                        .hasMessage("user with username " + username + " was not found");
+                .hasMessage("user with username " + username + " was not found");
 
         verify(userService, times(1)).findByUserName(username);
-        assertThat(output.toString()).contains("loadUserByUsername " + username);
-        assertThat(output.toString()).doesNotContain("loaded SecurityUserDetails ");
+        assertThat(output.toString()).contains("Requested to loadUserByUsername() with id = " + username);
+        assertThat(output.toString()).doesNotContain("Loaded UserDtoResponse ");
     }
 }

@@ -3,9 +3,9 @@ package com.trackerauth.AuthServer.domains.user.scope;
 import javax.validation.constraints.NotEmpty;
 
 public enum UserScope {
-    READ("read"),
-    WRITE("write"),
-    READ_WRITE("read&write");
+    READ("READ"),
+    WRITE("WRITE"),
+    READ_WRITE("READ&WRITE");
 
     private final String code;
 

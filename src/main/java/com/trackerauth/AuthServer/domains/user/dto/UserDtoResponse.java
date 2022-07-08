@@ -8,7 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UserResponseDto extends RepresentationModel<UserResponseDto> {
+public class UserDtoResponse extends RepresentationModel<UserDtoResponse> {
 
     private String id;
     private String username;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "app")
-public class AppConfig {
+public class AppValuesHolder {
 
     public Boolean isDevelopmentMode;
 

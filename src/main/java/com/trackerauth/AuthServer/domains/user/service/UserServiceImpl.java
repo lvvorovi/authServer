@@ -2,14 +2,13 @@ package com.trackerauth.AuthServer.domains.user.service;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
-import com.trackerauth.AuthServer.domains.user.validation.UserRequestValidationService;
-import com.trackerauth.AuthServer.domains.user.validation.exception.UserNotFoundException;
 import com.trackerauth.AuthServer.domains.user.mapper.UserMapper;
 import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
-import org.modelmapper.internal.util.Assert;
+import com.trackerauth.AuthServer.domains.user.validation.UserRequestValidationService;
+import com.trackerauth.AuthServer.domains.user.validation.exception.UserNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +30,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto findByUserName(String username) {
+    public UserDtoResponse findByUserName(String username) {
+        if (username == null) throw new IllegalArgumentException("'username' passed to " +
+                this.getClass() + " findByUserName() cannot be null");
         UserEntity entity = repository.findByUsername(username).orElseThrow(() ->
                 new UserNotFoundException("User with username " + username + " was not found"));
         return mapper.entityToDto(entity);
     }
 
     @Override
-    public UserResponseDto save(UserDtoCreateRequest dto) {
-        Assert.notNull(dto, "UserDtoCreateRequest");
+    public UserDtoResponse save(UserDtoCreateRequest dto) {
+        if (dto == null) throw new IllegalArgumentException("'UserDtoCreateRequest' passed to " +
+                this.getClass() + " save() cannot be null");
         validationService.validate(dto);
         UserEntity entityToSave = mapper.dtoToEntity(dto);
         entityToSave.setId(UUID.randomUUID().toString());
@@ -50,16 +52,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto findById(String id) {
-        Assert.notNull(id, "'id' for User findById()");
+    public UserDtoResponse findById(String id) {
+        if (id == null) throw new IllegalArgumentException("'id' passed to " +
+                this.getClass() + " findById() cannot be null");
         UserEntity entity = repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("User with username " + id + " was not found"));
         return mapper.entityToDto(entity);
     }
 
     @Override
-    public UserResponseDto update(UserDtoUpdateRequest dto) {
-        Assert.notNull(dto, "UserDtoUpdateRequest");
+    public UserDtoResponse update(UserDtoUpdateRequest dto) {
+        if (dto == null) throw new IllegalArgumentException("'UserDtoUpdateRequest' passed to " +
+                this.getClass() + " update() cannot be null");
         validationService.validate(dto);
         UserEntity entityToUpdate = mapper.dtoToEntity(dto);
         entityToUpdate.setScope(UserScope.READ);
@@ -70,7 +74,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(String id) {
-        Assert.notNull(id, "'id' for User deleteById()");
+        if (id == null) throw new IllegalArgumentException("'id' passed to " +
+                this.getClass() + " deleteById() cannot be null");
         repository.deleteById(id);
     }
 

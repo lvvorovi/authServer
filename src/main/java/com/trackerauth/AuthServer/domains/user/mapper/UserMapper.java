@@ -2,8 +2,8 @@ package com.trackerauth.AuthServer.domains.user.mapper;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 
 public interface UserMapper {
 
@@ -11,6 +11,6 @@ public interface UserMapper {
 
     UserEntity dtoToEntity(UserDtoUpdateRequest dto);
 
-    UserResponseDto entityToDto(UserEntity entity);
+    UserDtoResponse entityToDto(UserEntity entity);
 
 }

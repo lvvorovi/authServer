@@ -7,7 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ClientResponseDto extends RepresentationModel<ClientResponseDto> {
+public class ClientDtoResponse extends RepresentationModel<ClientDtoResponse> {
 
     private String id;
     private String name;

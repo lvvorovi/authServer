@@ -12,10 +12,10 @@ import java.util.List;
 @EqualsAndHashCode
 public class SecurityUserDetails implements UserDetails {
 
-    private final UserResponseDto userResponseDto;
+    private final UserDtoResponse userDtoResponse;
 
-    public SecurityUserDetails(UserResponseDto userResponseDto) {
-        this.userResponseDto = userResponseDto;
+    public SecurityUserDetails(UserDtoResponse userDtoResponse) {
+        this.userDtoResponse = userDtoResponse;
     }
 
     @Override
@@ -25,12 +25,12 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userResponseDto.getPassword();
+        return userDtoResponse.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userResponseDto.getUsername();
+        return userDtoResponse.getUsername();
     }
 
     @Override

@@ -7,15 +7,15 @@ import java.util.*;
 
 public class SecurityClientDetails implements ClientDetails {
 
-    private final ClientResponseDto clientResponseDto;
+    private final ClientDtoResponse clientDtoResponse;
 
-    public SecurityClientDetails(ClientResponseDto clientResponseDto) {
-        this.clientResponseDto = clientResponseDto;
+    public SecurityClientDetails(ClientDtoResponse clientDtoResponse) {
+        this.clientDtoResponse = clientDtoResponse;
     }
 
     @Override
     public String getClientId() {
-        return clientResponseDto.getId();
+        return clientDtoResponse.getId();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class SecurityClientDetails implements ClientDetails {
 
     @Override
     public String getClientSecret() {
-        return clientResponseDto.getSecret();
+        return clientDtoResponse.getSecret();
     }
 
     @Override

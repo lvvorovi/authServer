@@ -1,8 +1,8 @@
 package com.trackerauth.AuthServer.controller;
 
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,22 +27,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findById(@NotBlank @PathVariable String id) {
-        UserResponseDto responseDto = service.findById(id);
+    public ResponseEntity<UserDtoResponse> findById(@PathVariable String id) {
+        UserDtoResponse responseDto = service.findById(id);
         addSelfLink(responseDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> save(@Valid @RequestBody UserDtoCreateRequest userDtoCreateRequest) {
-        UserResponseDto responseDto = service.save(userDtoCreateRequest);
+    public ResponseEntity<UserDtoResponse> save(@Valid @RequestBody UserDtoCreateRequest userDtoCreateRequest) {
+        UserDtoResponse responseDto = service.save(userDtoCreateRequest);
         addSelfLink(responseDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<UserResponseDto> update(@Valid @RequestBody UserDtoUpdateRequest userDtoUpdateRequest) {
-        UserResponseDto responseDto = service.update(userDtoUpdateRequest);
+    public ResponseEntity<UserDtoResponse> update(@Valid @RequestBody UserDtoUpdateRequest userDtoUpdateRequest) {
+        UserDtoResponse responseDto = service.update(userDtoUpdateRequest);
         addSelfLink(responseDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    private void addSelfLink(UserResponseDto dto) {
+    private void addSelfLink(UserDtoResponse dto) {
         dto.add(linkTo(methodOn(UserController.class).findById(dto.getId())).withSelfRel());
     }
 }

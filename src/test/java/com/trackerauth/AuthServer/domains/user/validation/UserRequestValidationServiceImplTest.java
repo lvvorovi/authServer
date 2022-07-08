@@ -8,15 +8,13 @@ import com.trackerauth.AuthServer.domains.user.validation.rule.UserRequestNameVa
 import com.trackerauth.AuthServer.domains.user.validation.rule.UserValidationRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -27,11 +25,6 @@ class UserRequestValidationServiceImplTest {
 
     UserRequestValidationServiceImpl victim;
     List<UserValidationRule> validationRuleList;
-
-    @Captor
-    ArgumentCaptor<UserDtoCreateRequest> createRequestCaptor;
-    @Captor
-    ArgumentCaptor<UserDtoUpdateRequest> updateRequestCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -48,12 +41,14 @@ class UserRequestValidationServiceImplTest {
         entity.setScope(UserScope.READ);
         return entity;
     }
+
     private UserDtoCreateRequest newUserCreateRequestDto(UserEntity entity) {
         UserDtoCreateRequest createRequestDto = new UserDtoCreateRequest();
         createRequestDto.setPassword(entity.getPassword());
         createRequestDto.setUsername(entity.getUsername());
         return createRequestDto;
     }
+
     private UserDtoUpdateRequest newUserUpdateRequestDto(UserEntity entity) {
         UserDtoUpdateRequest updateRequestDto = new UserDtoUpdateRequest();
         updateRequestDto.setPassword(entity.getPassword());
@@ -69,8 +64,8 @@ class UserRequestValidationServiceImplTest {
         victim.validate(createRequest);
 
         validationRuleList.forEach(rule ->
-                verify(rule).validate(createRequestCaptor.capture()));
-        createRequestCaptor.getAllValues().forEach(request -> assertEquals(createRequest, request));
+                verify(rule, times(1)).validate(createRequest));
+
     }
 
     @Test
@@ -80,8 +75,7 @@ class UserRequestValidationServiceImplTest {
         victim.validate(updateRequest);
 
         validationRuleList.forEach(rule ->
-                verify(rule).validate(updateRequestCaptor.capture()));
-        updateRequestCaptor.getAllValues().forEach(request -> assertEquals(updateRequest, request));
+                verify(rule, times(1)).validate(updateRequest));
     }
 
 

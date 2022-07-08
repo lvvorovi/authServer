@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
@@ -21,7 +22,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final JwtAccessTokenConverter converter;
     private final UserDetailsService userDetailsService;
 
-    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService/*, SecurityUserDetailsService userDetailsService*/, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, UserDetailsService userDetailsService) {
+    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, UserDetailsService userDetailsService) {
         this.clientDetailsService = clientDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
@@ -42,4 +43,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .userDetailsService(userDetailsService);
     }
 
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.tokenKeyAccess("isAuthenticated()");
+    }
 }
