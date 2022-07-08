@@ -1,20 +1,21 @@
 package com.trackerauth.AuthServer.domains.client.service;
 
-import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
-import com.trackerauth.AuthServer.domains.client.dto.CreateRequestClientDto;
-import com.trackerauth.AuthServer.domains.client.dto.UpdateRequestClientDto;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-@Validated
 public interface ClientService {
 
-    ClientResponseDto findById(@NotNull String clientId);
+    ClientDtoResponse findById(String clientId);
 
-    ClientResponseDto save(@NotNull CreateRequestClientDto dto);
+    ClientDtoResponse save(ClientDtoCreateRequest dto);
 
-    ClientResponseDto update(UpdateRequestClientDto dto);
+    ClientDtoResponse update(ClientDtoUpdateRequest dto);
 
     void deleteById(String id);
+
+    ClientDtoResponse findByName(String name);
 }

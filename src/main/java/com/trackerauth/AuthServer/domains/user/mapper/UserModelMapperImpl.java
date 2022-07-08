@@ -2,8 +2,8 @@ package com.trackerauth.AuthServer.domains.user.mapper;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class UserModelMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserResponseDto entityToDto(UserEntity entity) {
-        return mapper.map(entity, UserResponseDto.class);
+    public UserDtoResponse entityToDto(UserEntity entity) {
+        return mapper.map(entity, UserDtoResponse.class);
     }
 }

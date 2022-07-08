@@ -1,9 +1,9 @@
 package com.trackerauth.AuthServer.domains.client.mapper;
 
 import com.trackerauth.AuthServer.domains.client.ClientEntity;
-import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
-import com.trackerauth.AuthServer.domains.client.dto.CreateRequestClientDto;
-import com.trackerauth.AuthServer.domains.client.dto.UpdateRequestClientDto;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @Validated
 public interface ClientMapper {
 
-    ClientEntity createRequestDtoToEntity(@NotNull CreateRequestClientDto dto);
+    ClientEntity createRequestDtoToEntity(@NotNull ClientDtoCreateRequest dto);
 
-    ClientEntity updateRequestDtoToEntity(@NotNull UpdateRequestClientDto dto);
+    ClientEntity updateRequestDtoToEntity(@NotNull ClientDtoUpdateRequest dto);
 
-    ClientResponseDto entityToResponseDto(@NotNull ClientEntity entity);
+    ClientDtoResponse entityToResponseDto(@NotNull ClientEntity entity);
 
 }

@@ -2,14 +2,16 @@ package com.trackerauth.AuthServer.domains.user.service;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.mapper.UserMapper;
 import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.validation.UserRequestValidationServiceImpl;
 import com.trackerauth.AuthServer.domains.user.validation.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +37,10 @@ class UserServiceImplTest {
     @Mock
     UserRequestValidationServiceImpl validationService;
 
+    @Captor
+    ArgumentCaptor<UserEntity> entityCaptor;
+
+
     @InjectMocks
     UserServiceImpl victim;
 
@@ -47,8 +53,8 @@ class UserServiceImplTest {
         return entity;
     }
 
-    private UserResponseDto newUserResponseDto(UserEntity entity) {
-        UserResponseDto dto = new UserResponseDto();
+    private UserDtoResponse newUserDtoResponse(UserEntity entity) {
+        UserDtoResponse dto = new UserDtoResponse();
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setPassword(entity.getPassword());
@@ -56,14 +62,14 @@ class UserServiceImplTest {
         return dto;
     }
 
-    private UserDtoCreateRequest newUserCreateRequestDto(UserEntity entity) {
+    private UserDtoCreateRequest newUserDtoCreateResponse(UserEntity entity) {
         UserDtoCreateRequest createRequestDto = new UserDtoCreateRequest();
         createRequestDto.setPassword(entity.getPassword());
         createRequestDto.setUsername(entity.getUsername());
         return createRequestDto;
     }
 
-    private UserDtoUpdateRequest newUserUpdateRequestDto(UserEntity entity) {
+    private UserDtoUpdateRequest newUserDtoUpdateRequest(UserEntity entity) {
         UserDtoUpdateRequest updateRequestDto = new UserDtoUpdateRequest();
         updateRequestDto.setPassword(entity.getPassword());
         updateRequestDto.setUsername(entity.getUsername());
@@ -74,15 +80,26 @@ class UserServiceImplTest {
     @Test
     void findByUserName_returnUserResponseDto() {
         UserEntity entity = newUserEntity();
-        UserResponseDto responseDto = newUserResponseDto(entity);
+        UserDtoResponse responseDto = newUserDtoResponse(entity);
         when(repository.findByUsername(any())).thenReturn(Optional.of(entity));
         when(mapper.entityToDto(any())).thenReturn(responseDto);
 
-        UserResponseDto result = victim.findByUserName("username");
+        UserDtoResponse result = victim.findByUserName("username");
 
         assertEquals(responseDto, result);
         verify(repository, times(1)).findByUsername(any());
         verify(mapper, times(1)).entityToDto(any());
+        verifyNoInteractions(validationService, passwordEncoder);
+    }
+
+    @Test
+    void findByUserName_throwsIllegalArgumentExceptionForNull() {
+        String id = null;
+        assertThatThrownBy(() -> victim.findById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("'id' passed to " + victim.getClass() + " findById() cannot be null");
+
+        verifyNoInteractions(validationService, passwordEncoder, repository, mapper);
     }
 
     @Test
@@ -96,58 +113,85 @@ class UserServiceImplTest {
 
         verify(repository, times(1)).findByUsername(any());
         verify(mapper, times(0)).entityToDto(any());
+        verifyNoInteractions(passwordEncoder, validationService);
     }
 
     @Test
     void save_returnSavedEntity() {
-        UserEntity entityMock = mock(UserEntity.class);
+        String encodedPassword = "encodedPassword";
+        UserEntity mockedEntity = mock(UserEntity.class);
         UserEntity entity = newUserEntity();
-        UserDtoCreateRequest createRequest = newUserCreateRequestDto(entity);
-        UserResponseDto responseDto = newUserResponseDto(entity);
+        UserDtoCreateRequest createRequest = newUserDtoCreateResponse(entity);
+        UserDtoResponse responseDto = newUserDtoResponse(entity);
         doNothing().when(validationService).validate(createRequest);
-        when(mapper.dtoToEntity(createRequest)).thenReturn(entityMock);
-        when(repository.save(entityMock)).thenReturn(entity);
+        when(mapper.dtoToEntity(createRequest)).thenReturn(mockedEntity);
+        when(passwordEncoder.encode(mockedEntity.getPassword())).thenReturn(encodedPassword);
+        when(repository.save(mockedEntity)).thenReturn(entity);
         when(mapper.entityToDto(entity)).thenReturn(responseDto);
 
-        UserResponseDto result = victim.save(createRequest);
+        UserDtoResponse result = victim.save(createRequest);
 
         assertEquals(responseDto, result);
         verify(validationService, times(1)).validate(createRequest);
-        verify(entityMock, times(1)).setScope(UserScope.READ);
-        verify(entityMock, times(1)).setPassword(any());
-        verify(entityMock, times(1)).setId(any());
+        verify(mockedEntity, times(1)).setScope(UserScope.READ);
+        verify(mockedEntity, times(1)).setPassword(any());
+        verify(mockedEntity, times(1)).setId(any());
         verify(passwordEncoder, times(1)).encode(any());
         verify(mapper, times(1)).dtoToEntity(createRequest);
-        verify(repository, times(1)).save(entityMock);
+        verify(repository, times(1)).save(mockedEntity);
         verify(mapper, times(1)).entityToDto(entity);
+    }
+
+    @Test
+    void save_verifyCorrectEntityPassedToRepository() {
+        String encodedPassword = "encodedPassword";
+        UserEntity entity = newUserEntity();
+        UserDtoCreateRequest createRequest = newUserDtoCreateResponse(entity);
+        UserDtoResponse responseDto = newUserDtoResponse(entity);
+        doNothing().when(validationService).validate(createRequest);
+        when(mapper.dtoToEntity(createRequest)).thenReturn(entity);
+        when(passwordEncoder.encode(entity.getPassword())).thenReturn(encodedPassword);
+        when(repository.save(entity)).thenReturn(entity);
+        when(mapper.entityToDto(entity)).thenReturn(responseDto);
+
+        UserDtoResponse result = victim.save(createRequest);
+
+        assertEquals(responseDto, result);
+        verify(validationService, times(1)).validate(createRequest);
+        verify(passwordEncoder, times(1)).encode(any());
+        verify(mapper, times(1)).dtoToEntity(createRequest);
+        verify(repository, times(1)).save(entityCaptor.capture());
+        verify(mapper, times(1)).entityToDto(entity);
+
+        UserEntity capturedEntity = entityCaptor.getValue();
+        assertEquals(36, capturedEntity.getId().length());
+        assertEquals(UserScope.READ, capturedEntity.getScope());
+        assertEquals(encodedPassword, capturedEntity.getPassword());
     }
 
     @Test
     void save_throwsIllegalArgumentException() {
         assertThatThrownBy(() -> victim.save(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("UserDtoCreateRequest cannot be null");
+                .hasMessage("'UserDtoCreateRequest' passed to " + victim.getClass() + " save() cannot be null");
 
-        verifyNoInteractions(passwordEncoder);
-        verifyNoInteractions(validationService);
-        verifyNoInteractions(mapper);
-        verifyNoInteractions(repository);
+        verifyNoInteractions(passwordEncoder, validationService, mapper, repository);
     }
 
     @Test
     void findById_returnsUserResponseDto() {
         String id = "id";
         UserEntity entity = newUserEntity();
-        UserResponseDto responseDto = newUserResponseDto(entity);
+        UserDtoResponse responseDto = newUserDtoResponse(entity);
         when(repository.findById(id)).thenReturn(Optional.of(entity));
         when(mapper.entityToDto(entity)).thenReturn(responseDto);
 
-        UserResponseDto result = victim.findById(id);
+        UserDtoResponse result = victim.findById(id);
 
         verify(repository, times(1)).findById(id);
         verify(mapper, times(1)).entityToDto(entity);
         assertThatNoException().isThrownBy(() -> victim.findById(id));
-
+        verifyNoInteractions(passwordEncoder, validationService);
     }
 
     @Test
@@ -160,7 +204,7 @@ class UserServiceImplTest {
                 .hasMessage("User with username " + id + " was not found");
 
         verify(repository, times(1)).findById(id);
-        verifyNoInteractions(mapper);
+        verifyNoInteractions(mapper, passwordEncoder, validationService);
     }
 
     @Test
@@ -168,24 +212,23 @@ class UserServiceImplTest {
         String id = null;
         assertThatThrownBy(() -> victim.findById(id))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("'id' for User findById() cannot be null");
+                .hasMessage("'id' passed to " + victim.getClass() + " findById() cannot be null");
 
-        verifyNoInteractions(repository);
-        verifyNoInteractions(mapper);
+        verifyNoInteractions(repository, mapper, passwordEncoder);
     }
 
     @Test
     void update_returnsUpdatedDto() {
         UserEntity mockedEntity = mock(UserEntity.class);
         UserEntity entity = newUserEntity();
-        UserDtoUpdateRequest updateRequestDto = newUserUpdateRequestDto(entity);
-        UserResponseDto responseDto = newUserResponseDto(entity);
+        UserDtoUpdateRequest updateRequestDto = newUserDtoUpdateRequest(entity);
+        UserDtoResponse responseDto = newUserDtoResponse(entity);
         doNothing().when(validationService).validate(updateRequestDto);
         when(mapper.dtoToEntity(updateRequestDto)).thenReturn(mockedEntity);
         when(repository.save(mockedEntity)).thenReturn(entity);
         when(mapper.entityToDto(entity)).thenReturn(responseDto);
 
-        UserResponseDto result = victim.update(updateRequestDto);
+        UserDtoResponse result = victim.update(updateRequestDto);
 
         assertEquals(responseDto, result);
         verify(validationService, times(1)).validate(updateRequestDto);
@@ -201,7 +244,7 @@ class UserServiceImplTest {
     void update_throwsIllegalArgumentException() {
         assertThatThrownBy(() -> victim.update(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("UserDtoUpdateRequest cannot be null");
+                .hasMessage("'UserDtoUpdateRequest' passed to " + victim.getClass() + " update() cannot be null");
 
         verifyNoInteractions(validationService);
         verifyNoInteractions(mapper);
@@ -213,7 +256,7 @@ class UserServiceImplTest {
     void deleteById_throwsIllegalArgumentException() {
         assertThatThrownBy(() -> victim.deleteById(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("'id' for User deleteById() cannot be null");
+                .hasMessage("'id' passed to " + victim.getClass() + " deleteById() cannot be null");
 
         verifyNoInteractions(repository);
     }

@@ -10,7 +10,11 @@ public interface ClientRepository {
 
     Optional<ClientEntity> findById(String id);
 
+    Optional<ClientEntity> findByName(String name);
+
     ClientEntity save(ClientEntity entity);
 
     void deleteById(String id);
+
+    boolean existsById(String id);
 }

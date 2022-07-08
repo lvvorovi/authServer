@@ -1,8 +1,8 @@
 package com.trackerauth.AuthServer.controller;
 
-import com.trackerauth.AuthServer.domains.client.dto.ClientResponseDto;
-import com.trackerauth.AuthServer.domains.client.dto.CreateRequestClientDto;
-import com.trackerauth.AuthServer.domains.client.dto.UpdateRequestClientDto;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
+import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import com.trackerauth.AuthServer.domains.client.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +25,22 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDto> findById(@NotBlank @PathVariable String id) {
-        ClientResponseDto responseDto = service.findById(id);
+    public ResponseEntity<ClientDtoResponse> findById(@PathVariable String id) {
+        ClientDtoResponse responseDto = service.findById(id);
+        addSelfLink(responseDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponseDto> save(@RequestBody CreateRequestClientDto dto) {
-        ClientResponseDto responseDto = service.save(dto);
+    public ResponseEntity<ClientDtoResponse> save(@Valid @RequestBody ClientDtoCreateRequest dto) {
+        ClientDtoResponse responseDto = service.save(dto);
         addSelfLink(responseDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<ClientResponseDto> update(@Valid @RequestBody UpdateRequestClientDto dto) {
-        ClientResponseDto responseDto = service.update(dto);
+    public ResponseEntity<ClientDtoResponse> update(@Valid @RequestBody ClientDtoUpdateRequest dto) {
+        ClientDtoResponse responseDto = service.update(dto);
         addSelfLink(responseDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -50,7 +51,7 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
-    private void addSelfLink(ClientResponseDto dto) {
+    private void addSelfLink(ClientDtoResponse dto) {
         dto.add(linkTo(methodOn(ClientController.class).findById(dto.getId())).withSelfRel());
     }
 

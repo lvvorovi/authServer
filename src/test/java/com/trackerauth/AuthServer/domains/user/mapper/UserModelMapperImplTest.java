@@ -2,8 +2,8 @@ package com.trackerauth.AuthServer.domains.user.mapper;
 
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
+import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
-import com.trackerauth.AuthServer.domains.user.dto.UserResponseDto;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,8 @@ class UserModelMapperImplTest {
         return entity;
     }
 
-    private UserResponseDto userResponseDto(UserEntity entity) {
-        UserResponseDto dto = new UserResponseDto();
+    private UserDtoResponse userResponseDto(UserEntity entity) {
+        UserDtoResponse dto = new UserDtoResponse();
         dto.setId(entity.getId());
         dto.setPassword(entity.getPassword());
         dto.setScope(entity.getScope());
@@ -41,7 +41,6 @@ class UserModelMapperImplTest {
     private UserDtoCreateRequest createUserDto(UserEntity entity) {
         UserDtoCreateRequest dto = new UserDtoCreateRequest();
         dto.setPassword(entity.getPassword());
-//        dto.setScope(entity.getScope());
         dto.setUsername(entity.getUsername());
         return dto;
     }
@@ -50,7 +49,6 @@ class UserModelMapperImplTest {
         UserDtoUpdateRequest dto = new UserDtoUpdateRequest();
         dto.setId(entity.getId());
         dto.setPassword(entity.getPassword());
-//        dto.setScope(entity.getScope());
         dto.setUsername(entity.getUsername());
         return dto;
     }
@@ -79,8 +77,8 @@ class UserModelMapperImplTest {
     @Test
     void entityToDto_returnsDto() {
         UserEntity entity = userEntity();
-        UserResponseDto responseDto = userResponseDto(entity);
-        UserResponseDto mappedDto = victim.entityToDto(entity);
+        UserDtoResponse responseDto = userResponseDto(entity);
+        UserDtoResponse mappedDto = victim.entityToDto(entity);
         assertEquals(responseDto, mappedDto);
     }
 }
