@@ -1,3 +1,4 @@
+/*
 package com.trackerauth.AuthServer.domains.client.dto;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -78,3 +79,4 @@ public class SecurityClientDetails implements ClientDetails {
         return new HashMap<>();
     }
 }
+*/

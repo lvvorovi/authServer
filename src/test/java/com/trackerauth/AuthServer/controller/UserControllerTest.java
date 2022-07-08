@@ -1,6 +1,6 @@
 package com.trackerauth.AuthServer.controller;
 
-import com.trackerauth.AuthServer.config.AppValuesHolder;
+import com.trackerauth.AuthServer.config.app.AppValuesHolder;
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;

@@ -7,14 +7,15 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-@Validated
 public interface ClientService {
 
-    ClientDtoResponse findById(@NotNull String clientId);
+    ClientDtoResponse findById(String clientId);
 
-    ClientDtoResponse save(@NotNull ClientDtoCreateRequest dto);
+    ClientDtoResponse save(ClientDtoCreateRequest dto);
 
     ClientDtoResponse update(ClientDtoUpdateRequest dto);
 
     void deleteById(String id);
+
+    ClientDtoResponse findByName(String name);
 }

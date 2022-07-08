@@ -1,7 +1,6 @@
 package com.trackerauth.AuthServer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.trackerauth.AuthServer.config.AppValuesHolder;
+import com.trackerauth.AuthServer.config.app.AppValuesHolder;
 import com.trackerauth.AuthServer.domains.client.ClientEntity;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;

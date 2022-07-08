@@ -1,5 +1,8 @@
-package com.trackerauth.AuthServer.config;
+/*
+package com.trackerauth.AuthServer.config.security;
 
+import com.trackerauth.AuthServer.config.app.AppValuesHolder;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -15,13 +18,10 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Configuration
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AppValuesHolder appValuesHolder;
-
-    public SecurityConfig(AppValuesHolder appValuesHolder) {
-        this.appValuesHolder = appValuesHolder;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,3 +63,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
     }
 }
+*/

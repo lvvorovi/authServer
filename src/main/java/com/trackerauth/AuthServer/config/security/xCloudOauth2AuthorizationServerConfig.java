@@ -1,8 +1,11 @@
+/*
 package com.trackerauth.AuthServer.config;
 
 import com.trackerauth.AuthServer.domains.client.service.SecurityClientDetailsService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -14,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 
 @Configuration
 @EnableAuthorizationServer
+@AllArgsConstructor
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final SecurityClientDetailsService clientDetailsService;
@@ -21,14 +25,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final TokenStore tokenStore;
     private final JwtAccessTokenConverter converter;
     private final UserDetailsService userDetailsService;
-
-    public AuthorizationServerConfig(SecurityClientDetailsService clientDetailsService, AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter converter, UserDetailsService userDetailsService) {
-        this.clientDetailsService = clientDetailsService;
-        this.authenticationManager = authenticationManager;
-        this.tokenStore = tokenStore;
-        this.converter = converter;
-        this.userDetailsService = userDetailsService;
-    }
+    private final HttpSecurity http;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -47,4 +44,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("isAuthenticated()");
     }
+
+
 }
+*/

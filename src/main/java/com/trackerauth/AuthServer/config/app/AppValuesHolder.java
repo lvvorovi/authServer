@@ -1,4 +1,4 @@
-package com.trackerauth.AuthServer.config;
+package com.trackerauth.AuthServer.config.app;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

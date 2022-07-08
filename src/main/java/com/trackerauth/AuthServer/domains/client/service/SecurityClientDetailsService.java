@@ -1,7 +1,9 @@
+/*
 package com.trackerauth.AuthServer.domains.client.service;
 
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
 import com.trackerauth.AuthServer.domains.client.dto.SecurityClientDetails;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -11,13 +13,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@AllArgsConstructor
 public class SecurityClientDetailsService implements ClientDetailsService {
 
     private final ClientService clientService;
-
-    public SecurityClientDetailsService(ClientService clientService) {
-        this.clientService = clientService;
-    }
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -33,3 +32,4 @@ public class SecurityClientDetailsService implements ClientDetailsService {
         return new SecurityClientDetails(clientDtoResponse);
     }
 }
+*/

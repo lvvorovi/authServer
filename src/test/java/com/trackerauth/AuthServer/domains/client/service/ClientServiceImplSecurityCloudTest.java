@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class ClientServiceImplTest {
+class ClientServiceImplSecurityCloudTest {
 
     @Mock
     ClientRepository repository;
@@ -35,7 +35,7 @@ class ClientServiceImplTest {
     ClientValidationService validationService;
 
     @InjectMocks
-    ClientServiceImpl victim;
+    ClientServiceImplSecurityCloud victim;
 
     private ClientEntity newClientEntity() {
         ClientEntity entity = new ClientEntity();
