@@ -4,6 +4,7 @@ import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
@@ -40,6 +41,7 @@ public class RegisteredClientRepositoryImpl implements RegisteredClientRepositor
         return RegisteredClient.withId(response.getId())
                 .clientId(response.getName())
                 .clientSecret(response.getSecret())
+                .scope(OidcScopes.OPENID)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
