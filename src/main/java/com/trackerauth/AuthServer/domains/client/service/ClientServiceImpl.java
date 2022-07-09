@@ -1,4 +1,3 @@
-/*
 package com.trackerauth.AuthServer.domains.client.service;
 
 import com.trackerauth.AuthServer.domains.client.ClientEntity;
@@ -8,7 +7,6 @@ import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import com.trackerauth.AuthServer.domains.client.mapper.ClientMapper;
 import com.trackerauth.AuthServer.domains.client.repository.ClientRepository;
 import com.trackerauth.AuthServer.domains.client.validation.exception.ClientNotFoundException;
-import com.trackerauth.AuthServer.domains.client.validation.exception.NoSuchClientException;
 import com.trackerauth.AuthServer.domains.client.validation.service.ClientValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,14 +16,14 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class ClientServiceImplSecurityCloud implements ClientService {
+public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository repository;
     private final ClientMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final ClientValidationService validationService;
 
-    public ClientServiceImplSecurityCloud(ClientRepository repository, ClientMapper mapper, PasswordEncoder passwordEncoder, ClientValidationService validationService) {
+    public ClientServiceImpl(ClientRepository repository, ClientMapper mapper, PasswordEncoder passwordEncoder, ClientValidationService validationService) {
         this.repository = repository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
@@ -37,8 +35,18 @@ public class ClientServiceImplSecurityCloud implements ClientService {
         if (clientId == null) throw new IllegalArgumentException("'clientId' passed to " +
                 this.getClass() + " findById() cannot be null");
         ClientEntity entity = repository.findById(clientId)
-                .orElseThrow(() -> new NoSuchClientException("Client with id '" +
-                        clientId + "' was not found"));
+                .orElse(null);
+        if (entity == null) return null;
+        return mapper.entityToResponseDto(entity);
+    }
+
+    @Override
+    public ClientDtoResponse findByName(String name) {
+        if (name == null) throw new IllegalArgumentException("'clientId' passed to " +
+                this.getClass() + " findById() cannot be null");
+        ClientEntity entity = repository.findByName(name)
+                .orElse(null);
+        if (entity == null) return null;
         return mapper.entityToResponseDto(entity);
     }
 
@@ -77,4 +85,3 @@ public class ClientServiceImplSecurityCloud implements ClientService {
         }
     }
 }
-*/

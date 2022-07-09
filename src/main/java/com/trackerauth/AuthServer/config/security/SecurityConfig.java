@@ -30,7 +30,11 @@ public class SecurityConfig {
                     .formLogin();
         }
 
-        http.authorizeRequests()
+        http.oauth2ResourceServer(
+            oauth2ResourceServerCustomizer -> oauth2ResourceServerCustomizer.jwt().jwkSetUri(
+                    "http://localhost:9090/oauth2/jwks"
+            )
+        ).authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/clients").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .anyRequest().authenticated();

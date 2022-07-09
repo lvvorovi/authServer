@@ -1,19 +1,18 @@
 package com.trackerauth.AuthServer.controller;
 
 import com.trackerauth.AuthServer.config.app.AppValuesHolder;
+import com.trackerauth.AuthServer.config.security.SecurityConfig;
 import com.trackerauth.AuthServer.domains.client.ClientEntity;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import com.trackerauth.AuthServer.domains.client.service.ClientService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
@@ -24,15 +23,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest({ClientController.class, JsonUtil.class, AppValuesHolder.class})
+@WebMvcTest({SecurityConfig.class, ClientController.class, JsonUtil.class, AppValuesHolder.class})
 class ClientControllerTest {
 
     @Autowired
     MockMvc mvc;
     @Autowired
     JsonUtil jsonUtil;
-
     @MockBean
     ClientService service;
 
@@ -70,7 +67,7 @@ class ClientControllerTest {
 
     @WithMockUser
     @Test
-    void findById_whenId_returnsClientDtoResponseAsJsonAnd200() throws Exception {
+    void findById_whenId_thenReturnsClientDtoResponseAsJsonAnd200() throws Exception {
         ClientDtoResponse response = newClientDtoResponse(newClientEntity());
         when(service.findById(response.getId())).thenReturn(response);
 
@@ -94,7 +91,7 @@ class ClientControllerTest {
     }
 
     @Test
-    void save_whenClientDtoRequest_thenDelegatesToService_and_returnsResponseDto_and201() throws Exception {
+    void save_whenClientDtoRequest_thenDelegatesToService_ReturnsResponseDto_status201() throws Exception {
         ClientEntity entity = newClientEntity();
         ClientDtoCreateRequest request = newClientDtoCreateRequest(entity);
         ClientDtoResponse response = newClientDtoResponse(entity);
@@ -114,7 +111,7 @@ class ClientControllerTest {
     }
 
     @Test
-    void save_whenClientDtoRequestNameNull_thenReturns400() throws Exception {
+    void save_whenWrongJson_thenReturns400() throws Exception {
         ClientEntity entity = newClientEntity();
         ClientDtoCreateRequest request = newClientDtoCreateRequest(entity);
         request.setName(null);
@@ -127,24 +124,23 @@ class ClientControllerTest {
         verifyNoInteractions(service);
     }
 
-    @WithMockUser
     @Test
-    void update_whenClientDtoRequestNameNull_thenReturn400() throws Exception {
+    void update_whenIsNotAuthenticated_then401() throws Exception {
         ClientEntity entity = newClientEntity();
         ClientDtoUpdateRequest request = newClientDtoUpdateRequest(entity);
-        request.setName(null);
+        ClientDtoResponse response = newClientDtoResponse(entity);
 
         mvc.perform(put(linkTo(ClientController.class).toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(request)))
-                .andExpect(status().is(400));
+                .andExpect(status().is(401));
 
         verifyNoInteractions(service);
     }
 
     @WithMockUser
     @Test
-    void update_whenClientDtoRequest_thenDelegatesToService_and_returnsSavedValue_status204() throws Exception {
+    void update_whenClientDtoUpdateRequest_thenDelegatesToService_returnsSavedValue_status204() throws Exception {
         ClientEntity entity = newClientEntity();
         ClientDtoUpdateRequest request = newClientDtoUpdateRequest(entity);
         ClientDtoResponse response = newClientDtoResponse(entity);
@@ -163,16 +159,17 @@ class ClientControllerTest {
         verify(service, times(1)).update(request);
     }
 
+    @WithMockUser
     @Test
-    void update_whenIsNotAuthenticated_then401() throws Exception {
+    void update_whenClientDtoRequestNameNull_thenReturn400() throws Exception {
         ClientEntity entity = newClientEntity();
         ClientDtoUpdateRequest request = newClientDtoUpdateRequest(entity);
-        ClientDtoResponse response = newClientDtoResponse(entity);
+        request.setName(null);
 
         mvc.perform(put(linkTo(ClientController.class).toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(request)))
-                .andExpect(status().is(401));
+                .andExpect(status().is(400));
 
         verifyNoInteractions(service);
     }

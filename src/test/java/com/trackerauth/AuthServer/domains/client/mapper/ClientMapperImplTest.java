@@ -5,18 +5,20 @@ import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
+@ContextConfiguration(classes = {ClientMapperImpl.class, ModelMapper.class})
 class ClientMapperImplTest {
 
     @Autowired
     ClientMapperImpl victim;
-
 
     private ClientEntity newClientEntity() {
         ClientEntity entity = new ClientEntity();

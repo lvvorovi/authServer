@@ -37,12 +37,11 @@ class UserServiceImplTest {
     @Mock
     UserRequestValidationServiceImpl validationService;
 
-    @Captor
-    ArgumentCaptor<UserEntity> entityCaptor;
-
-
     @InjectMocks
     UserServiceImpl victim;
+
+    @Captor
+    ArgumentCaptor<UserEntity> entityCaptor;
 
     private UserEntity newUserEntity() {
         UserEntity entity = new UserEntity();

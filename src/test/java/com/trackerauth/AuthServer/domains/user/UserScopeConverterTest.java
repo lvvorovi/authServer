@@ -4,8 +4,6 @@ import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.scope.UserScopeConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 
@@ -13,11 +11,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@SpringBootTest
 class UserScopeConverterTest {
 
-    @InjectMocks
-    UserScopeConverter victim;
+    UserScopeConverter victim = new UserScopeConverter();
 
     @Test
     @DisplayName("convertToDatabaseColumn returns null when passed null")

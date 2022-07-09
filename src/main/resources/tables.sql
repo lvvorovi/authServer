@@ -24,3 +24,4 @@ select * from clients;
 DELETE FROM users;
 DELETE FROM clients;
 
+UPDATE users SET scope = 'READ';

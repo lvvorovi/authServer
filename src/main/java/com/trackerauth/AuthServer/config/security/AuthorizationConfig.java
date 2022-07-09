@@ -21,17 +21,14 @@ public class AuthorizationConfig {
     private final RegisteredClientRepositoryImpl repository;
     private final RSAKeyUtil rsaKeyUtil;
 
+//    http://127.0.0.1:9090/oauth2/authorize?response_type=code&client_id=clientId&scope=openid&redirect_uri=http://127.0.0.1:3000/authorized&code_challenge=dPz8OFyP8g1yHdxiH6lyoQnALCUbUUclGilMBtf7ksg&code_challenge_method=S256
+
     @Bean
     public SecurityFilterChain authorizationFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.formLogin();
-        return http.build();
+       http.formLogin();
+       return http.build();
     }
-
-//    @Bean
-//    public RegisteredClientRepository registeredClientRepository() {
-//        return repository;
-//    }
 
     @Bean
     public ProviderSettings providerSettings() {
