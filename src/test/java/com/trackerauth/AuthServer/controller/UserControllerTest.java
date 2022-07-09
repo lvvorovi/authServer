@@ -1,6 +1,7 @@
 package com.trackerauth.AuthServer.controller;
 
 import com.trackerauth.AuthServer.config.app.AppValuesHolder;
+import com.trackerauth.AuthServer.config.security.SecurityConfig;
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoResponse;
@@ -8,32 +9,30 @@ import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest({UserController.class, JsonUtil.class, AppValuesHolder.class})
+@WebMvcTest({SecurityConfig.class, UserController.class, JsonUtil.class, AppValuesHolder.class})
 class UserControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    private JsonUtil jsonUtil;
     @Autowired
-    JsonUtil jsonUtil;
-
+    private MockMvc mvc;
     @MockBean
-    UserService service;
+    private UserService service;
 
     private UserEntity newUserEntity() {
         UserEntity entity = new UserEntity();
@@ -70,7 +69,7 @@ class UserControllerTest {
 
     @WithMockUser
     @Test
-    void findById_returnsUserDtoResponseAsJson() throws Exception {
+    void findById_whenId_thenReturnsUserDtoResponseAsJsonAnd200() throws Exception {
         UserDtoResponse response = newUserDtoResponse(newUserEntity());
         String id = "id";
         response.setId(id);
@@ -98,13 +97,14 @@ class UserControllerTest {
     }
 
     @Test
-    void save_whenUserDtoCreateRequest_thenDelegatesToRepo_andReturnsSavedValue() throws Exception {
+    void save_whenUserDtoCreateRequest_thenDelegatesToService_ReturnsSavedValue() throws Exception {
         UserEntity entity = newUserEntity();
         UserDtoCreateRequest createRequest = newUserDtoCreateResponse(entity);
         UserDtoResponse response = newUserDtoResponse(entity);
         when(service.save(createRequest)).thenReturn(response);
 
         mvc.perform(post("/api/v1/users")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(createRequest)))
                 .andExpect(status().isCreated())
@@ -142,12 +142,11 @@ class UserControllerTest {
 
     @WithMockUser
     @Test
-    void update_whenUserDtoUpdateRequest_thenReturnUpdatedValue() throws Exception {
+    void update_whenUserDtoUpdateRequest_thenDelegatesToService_returnsSavedValue_status204() throws Exception {
         UserEntity entity = newUserEntity();
         UserDtoUpdateRequest updateRequest = newUserDtoUpdateRequest(entity);
         UserDtoResponse response = newUserDtoResponse(entity);
         when(service.update(updateRequest)).thenReturn(response);
-
 
         mvc.perform(put("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,6 +159,20 @@ class UserControllerTest {
                         is("http://localhost/api/v1/users/" + response.getId())));
 
         verify(service, times(1)).update(updateRequest);
+    }
+
+    @Test
+    @WithMockUser
+    void update_whenUserDtoUpdateRequestNameNull_thenReturn400() throws Exception {
+        UserDtoUpdateRequest request = newUserDtoUpdateRequest(newUserEntity());
+        request.setUsername(null);
+
+        mvc.perform(put(linkTo(UserController.class).toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonUtil.objectToJson(request)))
+                .andExpect(status().is(400));
+
+        verifyNoInteractions(service);
     }
 
     @Test

@@ -3,6 +3,8 @@ package com.trackerauth.AuthServer.domains.user.validation;
 import com.trackerauth.AuthServer.domains.user.UserEntity;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.user.dto.UserDtoUpdateRequest;
+import com.trackerauth.AuthServer.domains.user.repository.UserRepository;
+import com.trackerauth.AuthServer.domains.user.repository.UserRepositoryImpl;
 import com.trackerauth.AuthServer.domains.user.scope.UserScope;
 import com.trackerauth.AuthServer.domains.user.validation.rule.UserRequestNameValidationRule;
 import com.trackerauth.AuthServer.domains.user.validation.rule.UserValidationRule;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.LinkedList;
 import java.util.List;

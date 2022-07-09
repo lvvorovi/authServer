@@ -13,17 +13,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-class ClientServiceImplSecurityCloudTest {
+@SpringBootTest(classes = {ClientRepository.class, ClientMapper.class, PasswordEncoder.class, ClientValidationService.class})
+class ClientServiceImplTest {
 
     @Mock
     ClientRepository repository;
@@ -35,7 +35,7 @@ class ClientServiceImplSecurityCloudTest {
     ClientValidationService validationService;
 
     @InjectMocks
-    ClientServiceImplSecurityCloud victim;
+    ClientServiceImpl victim;
 
     private ClientEntity newClientEntity() {
         ClientEntity entity = new ClientEntity();
@@ -69,7 +69,7 @@ class ClientServiceImplSecurityCloudTest {
     }
 
     @Test
-    void findById_throwsIllegalArgumentException() {
+    void findById_whenNull_thenThrowsIllegalArgumentException() {
         String id = null;
         assertThatThrownBy(() -> victim.findById(id))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -79,14 +79,12 @@ class ClientServiceImplSecurityCloudTest {
     }
 
     @Test
-    void findById_throwsNoSuchClientException() {
+    void findById_whenNotFoundInRepository_thenReturnsNull() {
         String id = "id";
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> victim.findById(id))
-                .isInstanceOf(NoSuchClientException.class)
-                .hasMessage("Client with id '" + id + "' was not found");
-
+        ClientDtoResponse result = victim.findById(id);
+        assertNull(result);
         verify(repository, times(1)).findById(id);
         verifyNoInteractions(mapper, passwordEncoder, validationService);
     }
@@ -102,6 +100,43 @@ class ClientServiceImplSecurityCloudTest {
 
         assertEquals(responseDto, result);
         verify(repository, times(1)).findById(entity.getId());
+        verify(mapper, times(1)).entityToResponseDto(entity);
+        verifyNoInteractions(passwordEncoder, validationService);
+    }
+
+    @Test
+    void findByName_whenNull_thenThrowsIllegalArgumentException() {
+        assertThatThrownBy(() -> victim.findByName(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("'clientId' passed to " +
+                        victim.getClass() + " findById() cannot be null");
+
+        verifyNoInteractions(repository, mapper, passwordEncoder, validationService);
+    }
+
+    @Test
+    void findByName_whenNotFound_thenReturnsNull() {
+        String name = "name";
+        when(repository.findByName(name)).thenReturn(Optional.empty());
+
+        ClientDtoResponse result = victim.findByName(name);
+
+        assertNull(result);
+        verify(repository, times(1)).findByName(name);
+        verifyNoInteractions(mapper, passwordEncoder, validationService);
+    }
+
+    @Test
+    void findByName_whenFound_thenReturnsClientResponse() {
+        ClientEntity entity = newClientEntity();
+        ClientDtoResponse response = newClientDtoResponse(entity);
+        when(repository.findByName(response.getName())).thenReturn(Optional.of(entity));
+        when(mapper.entityToResponseDto(entity)).thenReturn(response);
+
+        ClientDtoResponse result = victim.findByName(response.getName());
+
+        assertEquals(response, result);
+        verify(repository, times(1)).findByName(response.getName());
         verify(mapper, times(1)).entityToResponseDto(entity);
         verifyNoInteractions(passwordEncoder, validationService);
     }
@@ -209,5 +244,4 @@ class ClientServiceImplSecurityCloudTest {
         verify(repository, times(1)).deleteById(id);
         verifyNoInteractions(mapper, passwordEncoder, validationService);
     }
-
 }

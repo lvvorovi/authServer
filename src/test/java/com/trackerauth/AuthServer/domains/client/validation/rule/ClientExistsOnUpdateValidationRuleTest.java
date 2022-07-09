@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,7 +20,6 @@ class ClientExistsOnUpdateValidationRuleTest {
 
     @Mock
     ClientRepository repository;
-
     @InjectMocks
     ClientExistsOnUpdateValidationRule victim;
 

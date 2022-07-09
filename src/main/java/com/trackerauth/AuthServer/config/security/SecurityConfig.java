@@ -10,8 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Set;
-
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
@@ -31,11 +29,6 @@ public class SecurityConfig {
                     .csrf().disable()
                     .formLogin();
         }
-//
-//        http.authorizeRequests()
-//                .mvcMatchers(HttpMethod.POST, "/api/v1/clients").permitAll()
-//                .mvcMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
-//                .anyRequest().authenticated();
 
         http.oauth2ResourceServer(
             oauth2ResourceServerCustomizer -> oauth2ResourceServerCustomizer.jwt().jwkSetUri(
