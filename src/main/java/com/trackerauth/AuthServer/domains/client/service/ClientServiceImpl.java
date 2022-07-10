@@ -41,10 +41,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDtoResponse findByName(String name) {
+    public ClientDtoResponse findByClientId(String name) {
         if (name == null) throw new IllegalArgumentException("'clientId' passed to " +
                 this.getClass() + " findById() cannot be null");
-        ClientEntity entity = repository.findByName(name)
+        ClientEntity entity = repository.findByClientId(name)
                 .orElse(null);
         if (entity == null) return null;
         return mapper.entityToResponseDto(entity);
@@ -57,6 +57,7 @@ public class ClientServiceImpl implements ClientService {
         validationService.validate(dto);
         ClientEntity requestEntity = mapper.createRequestDtoToEntity(dto);
         requestEntity.setId(UUID.randomUUID().toString());
+        requestEntity.setClientId(UUID.randomUUID().toString());
         requestEntity.setSecret(passwordEncoder.encode(requestEntity.getSecret()));
         ClientEntity savedEntity = repository.save(requestEntity);
         return mapper.entityToResponseDto(savedEntity);

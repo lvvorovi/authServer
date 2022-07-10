@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 public class JsonUtil {
 
 
-    byte[] objectToJson(Object object) throws JsonProcessingException {
+    String objectToJson(Object object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.registerModule(new JavaTimeModule());
-        return mapper.writeValueAsBytes(object);
+        return mapper.writeValueAsString(object);
     }
 }

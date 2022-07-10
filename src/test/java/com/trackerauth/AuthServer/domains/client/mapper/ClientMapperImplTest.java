@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,17 +25,27 @@ class ClientMapperImplTest {
 
     private ClientEntity newClientEntity() {
         ClientEntity entity = new ClientEntity();
-        entity.setId("clientId");
-        entity.setSecret("clientSecret");
+        entity.setId("id");
+        entity.setClientId("clientId");
         entity.setName("clientName");
+        entity.setSecret("clientSecret");
+        entity.setRedirectUri("redirectUri");
+        entity.setScope(OidcScopes.OPENID);
+        entity.setAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+        entity.setAuthorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE);
         return entity;
     }
 
     private ClientDtoUpdateRequest newClientDtoUpdateRequest(ClientEntity entity) {
         ClientDtoUpdateRequest updateRequest = new ClientDtoUpdateRequest();
         updateRequest.setId(entity.getId());
+        updateRequest.setClientId(entity.getClientId());
         updateRequest.setName(entity.getName());
         updateRequest.setSecret(entity.getSecret());
+        updateRequest.setRedirectUri(entity.getRedirectUri());
+        updateRequest.setScope(entity.getScope());
+        updateRequest.setAuthenticationMethod(entity.getAuthenticationMethod());
+        updateRequest.setAuthorizationGrantType(entity.getAuthorizationGrantType());
         return updateRequest;
     }
 
@@ -40,14 +53,23 @@ class ClientMapperImplTest {
         ClientDtoCreateRequest createRequest = new ClientDtoCreateRequest();
         createRequest.setName(entity.getName());
         createRequest.setSecret(entity.getSecret());
+        createRequest.setRedirectUri(entity.getRedirectUri());
+        createRequest.setScope(entity.getScope());
+        createRequest.setAuthenticationMethod(entity.getAuthenticationMethod());
+        createRequest.setAuthorizationGrantType(entity.getAuthorizationGrantType());
         return createRequest;
     }
 
     private ClientDtoResponse newClientDtoResponse(ClientEntity entity) {
         ClientDtoResponse responseDto = new ClientDtoResponse();
         responseDto.setId(entity.getId());
+        responseDto.setClientId(entity.getClientId());
         responseDto.setName(entity.getName());
         responseDto.setSecret(entity.getSecret());
+        responseDto.setRedirectUri(entity.getRedirectUri());
+        responseDto.setScope(entity.getScope());
+        responseDto.setAuthenticationMethod(entity.getAuthenticationMethod());
+        responseDto.setAuthorizationGrantType(entity.getAuthorizationGrantType());
         return responseDto;
     }
 
@@ -59,8 +81,13 @@ class ClientMapperImplTest {
         ClientEntity result = victim.createRequestDtoToEntity(createRequest);
 
         assertNull(result.getId());
-        assertEquals(createRequest.getSecret(), result.getSecret());
+        assertNull(result.getClientId());
         assertEquals(createRequest.getName(), result.getName());
+        assertEquals(createRequest.getSecret(), result.getSecret());
+        assertEquals(createRequest.getRedirectUri(), result.getRedirectUri());
+        assertEquals(createRequest.getScope(), result.getScope());
+        assertEquals(createRequest.getAuthenticationMethod(), result.getAuthenticationMethod());
+        assertEquals(createRequest.getAuthorizationGrantType(), result.getAuthorizationGrantType());
     }
 
     @Test
@@ -71,8 +98,13 @@ class ClientMapperImplTest {
         ClientEntity result = victim.updateRequestDtoToEntity(updateRequest);
 
         assertEquals(updateRequest.getId(), result.getId());
-        assertEquals(updateRequest.getSecret(), result.getSecret());
+        assertEquals(updateRequest.getClientId(), result.getClientId());
         assertEquals(updateRequest.getName(), result.getName());
+        assertEquals(updateRequest.getSecret(), result.getSecret());
+        assertEquals(updateRequest.getRedirectUri(), result.getRedirectUri());
+        assertEquals(updateRequest.getScope(), result.getScope());
+        assertEquals(updateRequest.getAuthenticationMethod(), result.getAuthenticationMethod());
+        assertEquals(updateRequest.getAuthorizationGrantType(), result.getAuthorizationGrantType());
     }
 
     @Test
@@ -83,7 +115,12 @@ class ClientMapperImplTest {
         ClientDtoResponse result = victim.entityToResponseDto(entity);
 
         assertEquals(response.getId(), result.getId());
-        assertEquals(response.getSecret(), result.getSecret());
+        assertEquals(response.getClientId(), result.getClientId());
         assertEquals(response.getName(), result.getName());
+        assertEquals(response.getSecret(), result.getSecret());
+        assertEquals(response.getRedirectUri(), result.getRedirectUri());
+        assertEquals(response.getScope(), result.getScope());
+        assertEquals(response.getAuthenticationMethod(), result.getAuthenticationMethod());
+        assertEquals(response.getAuthorizationGrantType(), result.getAuthorizationGrantType());
     }
 }

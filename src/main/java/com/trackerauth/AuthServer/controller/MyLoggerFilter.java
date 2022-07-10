@@ -1,4 +1,4 @@
-package com.trackerauth.AuthServer;
+package com.trackerauth.AuthServer.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -20,7 +20,7 @@ public class MyLoggerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         MDC.put("request_id", UUID.randomUUID().toString());
 
-        log.info("Request id {} requested url {}, with method {}",
+        log.debug("Request id {} requested url {}, with method {}",
                 MDC.get("request_id"), request.getRequestURL(), request.getMethod());
 
         try {

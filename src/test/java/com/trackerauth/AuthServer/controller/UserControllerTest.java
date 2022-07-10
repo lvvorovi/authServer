@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -75,21 +76,24 @@ class UserControllerTest {
         response.setId(id);
         when(service.findById(id)).thenReturn(response);
 
-        mvc.perform(get("/api/v1/users/" + id)
+        mvc.perform(get(linkTo(methodOn(UserController.class).findById(id)).toUri())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(response.getId())))
                 .andExpect(jsonPath("$.username", is(response.getUsername())))
                 .andExpect(jsonPath("$.scope", is(response.getScope().getCode())))
                 .andExpect(jsonPath("$._links.self.href",
-                        is("http://localhost/api/v1/users/" + id)));
+                                is("http://localhost" +
+                                        linkTo(methodOn(UserController.class).findById(id)))));
 
         verify(service, times(1)).findById(id);
     }
 
     @Test
     void findById_whenIsNotAuthenticated_thenReturn401() throws Exception {
-        mvc.perform(get("/api/v1/users/any")
+        mvc.perform(get(linkTo(UserController.class) + "any")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(401));
 
@@ -103,7 +107,7 @@ class UserControllerTest {
         UserDtoResponse response = newUserDtoResponse(entity);
         when(service.save(createRequest)).thenReturn(response);
 
-        mvc.perform(post("/api/v1/users")
+        mvc.perform(post(linkTo(UserController.class).toUri())
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(createRequest)))
@@ -112,7 +116,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.username", is(response.getUsername())))
                 .andExpect(jsonPath("$.scope", is(response.getScope().getCode())))
                 .andExpect(jsonPath("$._links.self.href",
-                        is("http://localhost/api/v1/users/" + response.getId())));
+                        is("http://localhost" +
+                                linkTo(methodOn(UserController.class).findById(response.getId())))));
 
         verify(service, times(1)).save(createRequest);
     }
@@ -123,7 +128,8 @@ class UserControllerTest {
         UserDtoCreateRequest createRequest = newUserDtoCreateResponse(entity);
         createRequest.setUsername(null);
 
-        mvc.perform(post("/api/v1/users")
+        mvc.perform(post(linkTo(UserController.class).toUri())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(createRequest)))
                 .andExpect(status().is(400));
@@ -133,7 +139,8 @@ class UserControllerTest {
 
     @Test
     void update_whenIsNotAuthenticated_thenReturn401() throws Exception {
-        mvc.perform(put("/api/v1/users")
+        mvc.perform(put(linkTo(UserController.class).toUri())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(401));
 
@@ -148,7 +155,8 @@ class UserControllerTest {
         UserDtoResponse response = newUserDtoResponse(entity);
         when(service.update(updateRequest)).thenReturn(response);
 
-        mvc.perform(put("/api/v1/users")
+        mvc.perform(put(linkTo(UserController.class).toUri())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(updateRequest)))
                 .andExpect(status().isOk())
@@ -156,7 +164,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.scope", is(response.getScope().getCode())))
                 .andExpect(jsonPath("$.username", is(response.getUsername())))
                 .andExpect(jsonPath("$._links.self.href",
-                        is("http://localhost/api/v1/users/" + response.getId())));
+                        is("http://localhost" +
+                                        linkTo(methodOn(UserController.class).findById(response.getId())))));
 
         verify(service, times(1)).update(updateRequest);
     }
@@ -167,7 +176,8 @@ class UserControllerTest {
         UserDtoUpdateRequest request = newUserDtoUpdateRequest(newUserEntity());
         request.setUsername(null);
 
-        mvc.perform(put(linkTo(UserController.class).toString())
+        mvc.perform(put(linkTo(UserController.class).toUri())
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonUtil.objectToJson(request)))
                 .andExpect(status().is(400));
@@ -177,7 +187,8 @@ class UserControllerTest {
 
     @Test
     void deleteById_whenIsNotAuthenticated_thenReturn401() throws Exception {
-        mvc.perform(delete("/api/v1/users/any"))
+        mvc.perform(delete(linkTo(methodOn(UserController.class).deleteById("any")).toUri())
+                        .with(csrf()))
                 .andExpect(status().is(401));
 
         verifyNoInteractions(service);
@@ -189,7 +200,8 @@ class UserControllerTest {
         String id = "id";
         doNothing().when(service).deleteById(id);
 
-        mvc.perform(delete("/api/v1/users/" + id))
+        mvc.perform(delete(linkTo(methodOn(UserController.class).deleteById(id)).toUri())
+                        .with(csrf()))
                 .andExpect(status().is(204));
 
         verify(service, times(1)).deleteById(id);

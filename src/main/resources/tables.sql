@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE users (
+create TABLE users (
     id VARCHAR(60) NOT NULL,
     username VARCHAR (45) NOT NULL,
     password VARCHAR (60) NOT NULL,
@@ -10,18 +10,26 @@ CREATE TABLE users (
     CONSTRAINT uc_user_email UNIQUE (username)
 );
 
-CREATE TABLE clients (
+create TABLE clients (
     id VARCHAR(60) NOT NULL,
-    name VARCHAR (30) NOT NULL,
-    secret VARCHAR(60) NOT NULL,
+    client_id VARCHAR(60) NOT NULL,
+    client_name VARCHAR (30) NOT NULL,
+    client_secret VARCHAR(60) NOT NULL,
+    redirect_uri VARCHAR(120) NOT NULL,
+    client_scope VARCHAR(30) NOT NULL,
+    authentication_method VARBINARY(264) NOT NULL,
+    authorization_grant_type VARBINARY(264) NOT NULL,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT uc_clients_clientId UNIQUE (client_id)
 );
+
+DROP TABLE clients;
 
 select * from users;
 select * from clients;
 
-DELETE FROM users;
-DELETE FROM clients;
+delete from users;
+delete from clients;
 
-UPDATE users SET scope = 'READ';
+update users set scope = 'READ';

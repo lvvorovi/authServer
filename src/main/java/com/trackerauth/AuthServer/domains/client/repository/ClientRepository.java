@@ -10,7 +10,7 @@ public interface ClientRepository {
 
     Optional<ClientEntity> findById(String id);
 
-    Optional<ClientEntity> findByName(String name);
+    Optional<ClientEntity> findByClientId(String name);
 
     ClientEntity save(ClientEntity entity);
 
