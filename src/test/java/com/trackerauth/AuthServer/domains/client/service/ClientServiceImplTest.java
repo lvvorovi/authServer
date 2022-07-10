@@ -106,7 +106,7 @@ class ClientServiceImplTest {
 
     @Test
     void findByName_whenNull_thenThrowsIllegalArgumentException() {
-        assertThatThrownBy(() -> victim.findByName(null))
+        assertThatThrownBy(() -> victim.findByClientId(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("'clientId' passed to " +
                         victim.getClass() + " findById() cannot be null");
@@ -117,12 +117,12 @@ class ClientServiceImplTest {
     @Test
     void findByName_whenNotFound_thenReturnsNull() {
         String name = "name";
-        when(repository.findByName(name)).thenReturn(Optional.empty());
+        when(repository.findByClientId(name)).thenReturn(Optional.empty());
 
-        ClientDtoResponse result = victim.findByName(name);
+        ClientDtoResponse result = victim.findByClientId(name);
 
         assertNull(result);
-        verify(repository, times(1)).findByName(name);
+        verify(repository, times(1)).findByClientId(name);
         verifyNoInteractions(mapper, passwordEncoder, validationService);
     }
 
@@ -130,13 +130,13 @@ class ClientServiceImplTest {
     void findByName_whenFound_thenReturnsClientResponse() {
         ClientEntity entity = newClientEntity();
         ClientDtoResponse response = newClientDtoResponse(entity);
-        when(repository.findByName(response.getName())).thenReturn(Optional.of(entity));
+        when(repository.findByClientId(response.getName())).thenReturn(Optional.of(entity));
         when(mapper.entityToResponseDto(entity)).thenReturn(response);
 
-        ClientDtoResponse result = victim.findByName(response.getName());
+        ClientDtoResponse result = victim.findByClientId(response.getName());
 
         assertEquals(response, result);
-        verify(repository, times(1)).findByName(response.getName());
+        verify(repository, times(1)).findByClientId(response.getName());
         verify(mapper, times(1)).entityToResponseDto(entity);
         verifyNoInteractions(passwordEncoder, validationService);
     }

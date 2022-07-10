@@ -26,13 +26,18 @@ public class AuthorizationConfig {
     @Bean
     public SecurityFilterChain authorizationFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-       http.formLogin();
+       http.formLogin().permitAll()
+               .and()
+               .cors().disable()
+                .csrf().disable();
        return http.build();
     }
 
     @Bean
     public ProviderSettings providerSettings() {
-        return ProviderSettings.builder().issuer("http://localhost:9090").build();
+        return ProviderSettings.builder()
+                .issuer("http://127.0.0.1:9090")
+                .build();
     }
 
     @Bean

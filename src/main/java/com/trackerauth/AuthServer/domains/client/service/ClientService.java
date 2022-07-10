@@ -3,9 +3,6 @@ package com.trackerauth.AuthServer.domains.client.service;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoCreateRequest;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoResponse;
 import com.trackerauth.AuthServer.domains.client.dto.ClientDtoUpdateRequest;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotNull;
 
 public interface ClientService {
 
@@ -17,5 +14,5 @@ public interface ClientService {
 
     void deleteById(String id);
 
-    ClientDtoResponse findByName(String name);
+    ClientDtoResponse findByClientId(String name);
 }

@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ClientRepositoryImpl extends CrudRepository<ClientEntity, String>, ClientRepository {
 
     @Override
-    Optional<ClientEntity> findByName(String name);
+    Optional<ClientEntity> findByClientId(String name);
 }
