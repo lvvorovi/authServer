@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,12 +32,14 @@ public class SecurityConfig {
         }
 
         http.oauth2ResourceServer(
-            oauth2ResourceServerCustomizer ->
-                oauth2ResourceServerCustomizer.jwt().jwkSetUri("http://localhost:9090/oauth2/jwks")
-        )
+                        oauth2ResourceServerCustomizer ->
+                                oauth2ResourceServerCustomizer.jwt().jwkSetUri("http://localhost:9090/oauth2/jwks")
+                )
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/clients").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+//                .mvcMatchers("/").permitAll()
+//                .mvcMatchers("").permitAll()
                 .anyRequest().authenticated();
 
         return http.build();
