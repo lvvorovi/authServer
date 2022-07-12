@@ -19,7 +19,7 @@ public class RSAKeyUtil {
 
     private RSAKey key;
 
-    public RSAKey getKey() { //TODO lock for generateKey()
+    public RSAKey getKey() {
         return key;
     }
 

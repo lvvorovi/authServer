@@ -33,3 +33,4 @@ delete from users;
 delete from clients;
 
 update users set scope = 'READ';
+UPDATE clients SET redirect_uri = 'http://127.0.0.1:3000/authorized'
